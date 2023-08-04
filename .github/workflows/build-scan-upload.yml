@@ -23,7 +23,7 @@ jobs:
         with:
           workflow: build-verification.yml
           workflow_conclusion: completed
-      - name: Copy data
+      - name: Copy scan data
         run: |
           mkdir -p ~/.gradle/build-scan-data/
           cp -r scan-metadata/* ~/.gradle/build-scan-data/

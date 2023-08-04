@@ -1,6 +1,6 @@
 name: Verify Build
 
-on: [ push, pull_request, workflow_dispatch ]
+on: [ pull_request ]
 
 jobs:
   verification:
@@ -18,10 +18,6 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Build with Gradle
         run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
-        env:
-          GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-      - name: Check data
-        run: ls -ltR ~/.gradle/build-scan-data/*/previous
       - name: Save Build Scan
         uses: actions/upload-artifact@v3
         with:
