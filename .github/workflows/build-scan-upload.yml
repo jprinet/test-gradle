@@ -2,7 +2,9 @@ name: Build Scan Upload
 
 on:
     workflow_run:
-        workflows: ["Verify Build"]
+      workflows: ["Verify Build"]
+      branches-ignore:
+        - 'main'
 
 jobs:
   verification:
