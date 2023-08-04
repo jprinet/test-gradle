@@ -19,13 +19,13 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
       - name: Save PR number
-        env:
-          PR_NUMBER: ${{ github.event.number }}
-        run: echo $PR_NUMBER > pr_number
+#        env:
+#          PR_NUMBER: ${{ github.event.number }}
+        run: echo ${{ github.event.number }} > pr-number.txt
       - name: Save Build Metadata
         uses: actions/upload-artifact@v3
         with:
           name: build-metadata
           path: |
             ~/.gradle/build-scan-data/
-            pr_number
+            pr-number.txt
