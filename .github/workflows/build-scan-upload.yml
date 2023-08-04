@@ -25,7 +25,6 @@ jobs:
         with:
           workflow: build-verification.yml
           workflow_conclusion: completed
-          path: ~/.gradle/build-scan-data/3.14.1/previous/
       - name: Copy data
         run: |
           mkdir -p ~/.gradle/build-scan-data/3.14.1/previous
