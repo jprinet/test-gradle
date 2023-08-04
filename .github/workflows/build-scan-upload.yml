@@ -28,7 +28,6 @@ jobs:
           workflow_conclusion: completed
       - name: Copy Build Metadata
         run: |
-#          mkdir -p ~/.gradle/build-scan-data/
           ls -ltR build-metadata/
           cp -r build-metadata/* ~/.gradle/build-scan-data/
           ls -ltR ~/.gradle/build-scan-data/
