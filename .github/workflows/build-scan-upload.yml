@@ -29,8 +29,8 @@ jobs:
       - name: Copy Build Metadata
         run: |
           ls -ltR build-metadata/
+          mkdir -p ~/.gradle/build-scan-data/
           cp -r build-metadata/* ~/.gradle/build-scan-data/
-          ls -ltR ~/.gradle/build-scan-data/
       - name: Publish build scan
         run: ./gradlew buildScanPublishPrevious | tee build.out
         env:
