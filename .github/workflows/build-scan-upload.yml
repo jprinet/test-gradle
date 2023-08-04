@@ -45,7 +45,7 @@ jobs:
           script: |
             let fs = require('fs');
             let prNumber = Number(fs.readFileSync('build-metadata/pr-number.txt'));
-            let buildScanLink = Number(fs.readFileSync('build-scan-link.txt'));
+            let buildScanLink = fs.readFileSync('build-scan-link.txt');
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
