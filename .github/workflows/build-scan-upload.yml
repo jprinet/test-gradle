@@ -5,6 +5,9 @@ on:
       workflows: ["Verify Build"]
       types: [completed]
 
+concurrency:
+    group: pr
+
 jobs:
   verification:
     name: Build Scan Upload
