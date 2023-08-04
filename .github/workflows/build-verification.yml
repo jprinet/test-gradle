@@ -24,3 +24,11 @@ jobs:
           name: scan-metadata
           path: |
             ~/.gradle/build-scan-data/
+      - name: Save PR number
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: echo $PR_NUMBER > pr_number
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pr_number
+          path: pr_number
