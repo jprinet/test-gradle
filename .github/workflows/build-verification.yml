@@ -25,7 +25,6 @@ jobs:
       - name: Save Build Scan
         uses: actions/upload-artifact@v3
         with:
-          name: buildscan
+          name: scan-metadata
           path: |
-            ~/.gradle/build-scan-data/*/previous/scan.scan
-            ~/.gradle/build-scan-data/*/previous/scan.properties
+            ~/.gradle/build-scan-data/

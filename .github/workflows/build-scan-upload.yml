@@ -25,9 +25,9 @@ jobs:
           workflow_conclusion: completed
       - name: Copy data
         run: |
-          mkdir -p ~/.gradle/build-scan-data/3.14.1/previous
-          cp -r buildscan/* ~/.gradle/build-scan-data/3.14.1/previous/
-          ls -ltR ~/.gradle/build-scan-data/3.14.1/previous
+          mkdir -p ~/.gradle/build-scan-data/
+          cp -r scan-metadata/* ~/.gradle/build-scan-data/
+          ls -ltR ~/.gradle/build-scan-data/
       - name: Publish build scan
         run: ./gradlew buildScanPublishPrevious
         env:
