@@ -21,4 +21,4 @@ jobs:
         env:
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
       - name: Check data
-        run: ls -ltR ~/.m2/.gradle-enterprise
+        run: ls -ltR ~/.gradle/build-scan-data/*/previous
