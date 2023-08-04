@@ -26,7 +26,7 @@ jobs:
       - name: Copy data
         run: |
           mkdir -p ~/.gradle/build-scan-data/3.14.1/previous
-          cp buildscan/* ~/.gradle/build-scan-data/3.14.1/previous
+          cp -r buildscan/* ~/.gradle/
           ls -ltR ~/.gradle/build-scan-data/3.14.1/previous
       - name: Publish build scan
         run: ./gradlew buildScanPublishPrevious
