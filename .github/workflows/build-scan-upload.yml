@@ -9,6 +9,8 @@ jobs:
   verification:
     name: Build Scan Upload
     runs-on: ubuntu-latest
+    permissions:
+        pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v3
