@@ -3,6 +3,7 @@ name: Build Scan Upload
 on:
     workflow_run:
       workflows: ["Verify Build"]
+      types: [completed]
 
 jobs:
   verification:
