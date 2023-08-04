@@ -26,4 +26,6 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: buildscan
-          path: ~/.gradle/build-scan-data/*/previous/
+          path: |
+            ~/.gradle/build-scan-data/*/previous/scan.scan
+            ~/.gradle/build-scan-data/*/previous/scan.properties
