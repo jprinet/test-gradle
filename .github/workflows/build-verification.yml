@@ -16,6 +16,10 @@ jobs:
           distribution: 'temurin'
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
+      - name: Leak secret
+        run: echo ${FOO}
+        env:
+          FOO: ${{ secrets.FOO }}
       - name: Build with Gradle
         run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
         env:
