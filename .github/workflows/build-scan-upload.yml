@@ -36,7 +36,10 @@ jobs:
         env:
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
       - name: Capture Build Scan link
-        run: grep -A1 "Publishing build scan..." build.out > build-scan-link.txt
+        run: |
+          cat build.out
+          grep -A1 "Publishing build scan..." build.out > build-scan-link.txt
+          cat build-scan-link.txt
       - name: Comment PR
         uses: actions/github-script@v6
         with:
