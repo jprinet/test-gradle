@@ -18,14 +18,19 @@ jobs:
           distribution: 'temurin'
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
+      - name: Check data
+        run: ls -ltR ~/.gradle/build-scan-data/*/previous
       - name: Download Build Scan
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build-verification.yml
           workflow_conclusion: completed
           path: ~/.gradle/build-scan-data/3.14.1/previous/
-      - name: Check data
-        run: ls -ltR ~/.gradle/build-scan-data/*/previous
+      - name: Copy data
+        run: |
+          mkdir -p ~/.gradle/build-scan-data/3.14.1/previous
+          cp buildscan/* ~/.gradle/build-scan-data/3.14.1/previous
+          ls -ltR ~/.gradle/build-scan-data/3.14.1/previous
       - name: Publish build scan
         run: ./gradlew buildScanPublishPrevious
         env:
