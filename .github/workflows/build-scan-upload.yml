@@ -1,8 +1,8 @@
-name: Build Scan Upload
+name: PR Build Scan Upload
 
 on:
     workflow_run:
-      workflows: ["Verify Build"]
+      workflows: ["PR Build"]
       types: [completed]
 
 concurrency:

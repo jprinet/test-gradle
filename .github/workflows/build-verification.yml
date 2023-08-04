@@ -1,4 +1,4 @@
-name: Verify Build
+name: PR Build
 
 on: [ pull_request ]
 
