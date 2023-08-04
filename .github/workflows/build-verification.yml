@@ -1,6 +1,6 @@
 name: Verify Build
 
-on: [ push, pull_request_target, workflow_dispatch ]
+on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
   verification:
@@ -20,3 +20,5 @@ jobs:
         run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
         env:
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+      - name: Check data
+        run: ls -ltR ~/.m2/.gradle-enterprise
