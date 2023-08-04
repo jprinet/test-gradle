@@ -22,3 +22,8 @@ jobs:
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
       - name: Check data
         run: ls -ltR ~/.gradle/build-scan-data/*/previous
+      - name: Save Build Scan
+        uses: actions/upload-artifact@v3
+        with:
+          name: buildscan
+          path: ~/.gradle/build-scan-data/*/previous/
