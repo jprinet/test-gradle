@@ -42,7 +42,7 @@ jobs:
         with:
           script: |
             let fs = require('fs');
-            let prNumber = Number(fs.readFileSync('build_metadata/pr-number.txt'));
+            let prNumber = Number(fs.readFileSync('~/.gradle/build-scan-data/pr-number.txt'));
             let buildScanLink = Number(fs.readFileSync('build-scan-link.txt'));
             await github.rest.issues.createComment({
               owner: context.repo.owner,
