@@ -96,12 +96,3 @@ jobs:
               repo: context.repo.repo,
               body: `[Build Scan®](${buildScanLink})`
             });
-            //let prNumber = Number(process.env.pr);
-            //let buildScanLink = process.env.scanlink;
-            //await github.rest.issues.createComment({
-            //  owner: context.repo.owner,
-            //  repo: context.repo.repo,
-            //  issue_number: prNumber,
-            //  body: `[Build Scan®](${buildScanLink})`
-            //});
-
