@@ -91,9 +91,10 @@ jobs:
           scan-link: ${{ steps.capture-scan-link.outputs.scan-link }}
         with:
           script: |
+            const message = '[Build Scan®](' + process.env.scan-link + ')'";
             github.rest.issues.createComment({
               issue_number: process.env.pr,
               owner: context.owner,
               repo: context.repo,
-              body: `[Build Scan®](${process.env.scan-link})`
+              body: message
             })
