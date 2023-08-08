@@ -35,6 +35,14 @@ jobs:
           source ${BUILD_METADATA_DIR}/build.properties
           echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
           echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
+      - name: Wait for tests to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        timeout-minutes: 2
+        with:
+          ref: ${{ steps.load-metadata.outputs.sha }}
+          check-name: CLAAssistant
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 20
       - name: Wait for successful completion of CLA workflow
         uses: actions/github-script@v6
         id: check-cla
@@ -64,9 +72,9 @@ jobs:
                   return "true";
                 }
               }
-              sleep $WAIT_INTERVAL_SECS
+              sleep $WAIT_INTERVAL_SECS;
             }
-            return "false"
+            return "false";
       - name: Fail job if CLA are not agreed
         run: exit 1
         if: ${{ steps.check-cla.outputs.result }} == "false"
