@@ -51,9 +51,8 @@ jobs:
               console.log('Attempt ' + i);
               const checkRuns = await github.request('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
                 ref: process.env.sha,
-                per_page: 1
+                per_page: 100
               });
-              // only the last result should be present
               for await (const cr of checkRuns.data.check_runs) {
                 if(cr.name == 'CLAAssistant' && cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
