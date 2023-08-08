@@ -46,25 +46,29 @@ jobs:
           result-encoding: string
           script: |
             const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-            console.log('Polling CLA check...');
-            // we should have only the last result
-            for(let i = 1; i < 10; i++, await delay(15000)) {
+            let claAgreed = "false";
+
+            // Iterating until finding a successful CLA check
+            for(let i = 1; i < 10 && claAgreed == "false"; i++, await delay(15000)) {
               console.log('Attempt ' + i);
               const checkRuns = await github.request('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
                 ref: process.env.sha,
                 per_page: 1
               });
-              // we should have only the last result
+              // only the last result should be present
               for await (const cr of checkRuns.data.check_runs) {
                 if(cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
-                  return "true";
+                  claAgreed = "true";
+                  break;
                 }
               }
             }
-            return "false";
+            return claAgreed;
       - name: Fail job if CLA are not agreed
-        run: exit 1
+        run: |
+          echo ${{ steps.check-cla.outputs.result }}
+          exit 1
         if: ${{ steps.check-cla.outputs.result }} == "false"
       - name: Checkout
         uses: actions/checkout@v3
