@@ -31,6 +31,7 @@ jobs:
           echo "BUILD_PR=${{ github.event.number }}" >> ${BUILD_PROPERTIES}
           ls -ltR ~/.gradle/build-scan-data/
           cat ${BUILD_PROPERTIES}
+          echo "${BUILD_PROPERTIES}"
       - name: Upload Build Metadata
         uses: actions/upload-artifact@v3
         with:
