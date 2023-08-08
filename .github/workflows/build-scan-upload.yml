@@ -89,10 +89,19 @@ jobs:
           scan-link: ${{ steps.capture-scan-link.outputs.scan-link }}
         with:
           script: |
-            const message = '[Build Scan®](' + process.env.scan-link + ')';
-            github.rest.issues.createComment({
-              issue_number: Number(process.env.pr),
-              owner: context.owner,
-              repo: context.repo,
-              body: message
+            //const message = '[Build Scan®](' + process.env.scan-link + ')';
+            //github.rest.issues.createComment({
+              //issue_number: Number(process.env.pr),
+              //owner: context.owner,
+              //repo: context.repo,
+              //body: message
+            //});
+            let prNumber = Number(process.env.pr);
+            let buildScanLink = process.env.scan-link;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: `[Build Scan®](${buildScanLink})`
             });
+
