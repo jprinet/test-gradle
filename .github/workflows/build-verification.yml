@@ -25,13 +25,12 @@ jobs:
         env:
           BUILD_SCAN_DATA_DIR: ~/.gradle/build-scan-data
         run: |
-          mkdir -p ${{ env.BUILD_SCAN_DATA_DIR }}
+          mkdir -p ~/.gradle/build-scan-data
           BUILD_PROPERTIES="${{ env.BUILD_SCAN_DATA_DIR }}/build.properties"
-          echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > ${BUILD_PROPERTIES}
-          echo "BUILD_PR=${{ github.event.number }}" >> ${BUILD_PROPERTIES}
-          ls -ltR ~/.gradle/build-scan-data/
-          cat ${BUILD_PROPERTIES}
-          echo "${BUILD_PROPERTIES}"
+          echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > ~/.gradle/build-scan-data/build.properties
+          echo "BUILD_PR=${{ github.event.number }}" >> ~/.gradle/build-scan-data/build.properties
+          ls -ltR ~/.gradle/build-scan-data
+          cat ~/.gradle/build-scan-data/build.properties
       - name: Upload Build Metadata
         uses: actions/upload-artifact@v3
         with:
