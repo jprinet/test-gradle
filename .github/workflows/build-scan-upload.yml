@@ -37,6 +37,7 @@ jobs:
           echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
       - name: Wait for successful completion of CLA workflow
         uses: actions/github-script@v6
+        id: check-cla
         env:
           sha: ${{ steps.load-metadata.outputs.sha }}
           pr: ${{ steps.load-metadata.outputs.pr }}
@@ -60,14 +61,15 @@ jobs:
                 console.log('Validating check conclusion: ' + cr.conclusion);
                 if(cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
-                  exit 0;
+                  return "true";
                 }
               }
               sleep $WAIT_INTERVAL_SECS
             }
-            // Fail the job if CLA were not approved
-            //core.setFailed('CLA were not agreed')
-            exit 1
+            return "false"
+      - name: Fail job if CLA are not agreed
+        run: exit 1
+        if: ${{ steps.check-cla.outputs.result }} == "false"
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
