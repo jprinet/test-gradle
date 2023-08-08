@@ -52,7 +52,7 @@ jobs:
               console.log('Validating check conclusion: ' + cr.completed_at);
               console.log('Validating check conclusion: ' + cr.conclusion);
               if(cr.conclusion != 'success') {
-                console.log('Discarding ' + branch + ' with check conclusion ' + cr.conclusion);
+                console.log('check conclusion ' + cr.conclusion);
                 statusOK = false;
               }
             }
