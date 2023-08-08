@@ -47,24 +47,27 @@ jobs:
           result-encoding: string
           script: |
             console.log('Polling CLA check...');
-            attemptCount = 1;
+            let attemptCount = 1;
             while (true) {
               console.log('Attempt ' + attemptCount++);
               const checkRuns = await github.request('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
                 ref: process.env.sha,
                 per_page: 1
               });
+              // we should have only the last result
               for await (const cr of checkRuns.data.check_runs) {
                 console.log('Validating check conclusion: ' + cr.name);
                 console.log('Validating check conclusion: ' + cr.conclusion);
                 if(cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
-                  return "true";
+                  exit 0;
                 }
               }
               sleep $WAIT_INTERVAL_SECS
             }
-            core.setFailed('CLA were not agreed')
+            // Fail the job if CLA were not approved
+            //core.setFailed('CLA were not agreed')
+            exit 1
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
