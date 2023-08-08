@@ -12,26 +12,30 @@ jobs:
   verification:
     name: Build Scan Upload
     runs-on: ubuntu-latest
+    env:
+      BUILD_METADATA_DIR: "build-metadata"
     permissions:
-        pull-requests: write
+      pull-requests: write
     steps:
       - name: Download Build Metadata
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: build-verification.yml
           workflow_conclusion: completed
-      - name: Copy Build Metadata
+      - name: Restore Build Metadata
+        env:
+          BUILD_SCAN_DATA_DIR: "~/.gradle/build-scan-data/"
         run: |
-          ls -ltR build-metadata/
-          mkdir -p ~/.gradle/build-scan-data/
-          cp -r build-metadata/* ~/.gradle/build-scan-data/
+          ls -ltR ${BUILD_METADATA_DIR}
+          mkdir -p ${BUILD_SCAN_DATA_DIR}
+          cp -r ${BUILD_METADATA_DIR}/* ${BUILD_SCAN_DATA_DIR}
       - name: Load Build metadata
         id: load-metadata
         run: |
-          source build-metadata/build.properties
+          source ${BUILD_METADATA_DIR}/build.properties
           echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
           echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
-      - name: Fetch Build Metadata
+      - name: Wait for completion of workflow dependencies
         uses: actions/github-script@v6
         env:
           sha: ${{ steps.load-metadata.outputs.sha }}

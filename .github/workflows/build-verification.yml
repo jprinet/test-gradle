@@ -9,6 +9,8 @@ jobs:
   verification:
     name: Verification
     runs-on: ubuntu-latest
+    env:
+      BUILD_SCAN_DATA_DIR: "~/.gradle/build-scan-data/"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,8 +25,8 @@ jobs:
         run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
       - name: Save Build Metadata
         run: |
-          BUILD_PROPERTIES="~/.gradle/build-scan-data/build.properties"
-          mkdir -p "$(dirname -- ${BUILD_PROPERTIES})"
+          mkdir -p ${BUILD_SCAN_DATA_DIR}
+          BUILD_PROPERTIES="${BUILD_SCAN_DATA_DIR}/build.properties"
           echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > ${BUILD_PROPERTIES}
           echo "BUILD_PR=${{ github.event.number }}" >> ${BUILD_PROPERTIES}
           cat ${BUILD_PROPERTIES}
@@ -33,4 +35,4 @@ jobs:
         with:
           name: build-metadata
           path: |
-            ~/.gradle/build-scan-data/
+            ${BUILD_SCAN_DATA_DIR}
