@@ -86,10 +86,10 @@ jobs:
         uses: actions/github-script@v6
         env:
           pr: ${{ steps.load-metadata.outputs.pr }}
-          scan-link: ${{ steps.capture-scan-link.outputs.scan-link }}
+          scanlink: ${{ steps.capture-scan-link.outputs.scan-link }}
         with:
           script: |
-            //const message = '[Build Scan®](' + process.env.scan-link + ')';
+            //const message = '[Build Scan®](' + process.env.scanlink + ')';
             //github.rest.issues.createComment({
               //issue_number: Number(process.env.pr),
               //owner: context.owner,
@@ -97,7 +97,7 @@ jobs:
               //body: message
             //});
             let prNumber = Number(process.env.pr);
-            let buildScanLink = process.env.scan-link;
+            let buildScanLink = process.env.scanlink;
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
