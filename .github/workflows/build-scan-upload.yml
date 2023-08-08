@@ -58,12 +58,12 @@ jobs:
                 console.log('Validating check conclusion: ' + cr.conclusion);
                 if(cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
-                  return true;
+                  return "true";
                 }
               }
               sleep $WAIT_INTERVAL_SECS
             done
-            return false;
+            return "false";
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
