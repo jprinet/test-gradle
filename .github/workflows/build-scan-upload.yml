@@ -47,7 +47,7 @@ jobs:
             const checkRuns = await github.request('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
               ref: process.env.sha,
               per_page: 1,
-              sort: completed_at
+              sort: updated
             });
             for await (const cr of checkRuns.data.check_runs) {
               console.log('Validating check conclusion: ' + cr.name);
