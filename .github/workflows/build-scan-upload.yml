@@ -15,9 +15,48 @@ jobs:
     permissions:
         pull-requests: write
     steps:
+      - name: Download Build Metadata
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-verification.yml
+          workflow_conclusion: completed
+      - name: Copy Build Metadata
+        run: |
+          ls -ltR build-metadata/
+          mkdir -p ~/.gradle/build-scan-data/
+          cp -r build-metadata/* ~/.gradle/build-scan-data/
+      - name: Load Build metadata
+        id: load-metadata
+        run: |
+          source build-metadata/build.properties
+          echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
+          echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
+      - name: Fetch Build Metadata
+        uses: actions/github-script@v6
+        env:
+          sha: ${{ steps.load-metadata.outputs.sha }}
+          pr: ${{ steps.load-metadata.outputs.pr }}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            statusOK = true;
+            const checkRuns = await github.request('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
+              ref: process.env.sha
+            });
+            for await (const cr of checkRuns.data.check_runs) {
+              console.log('Validating check conclusion: ' + cr.name);
+              console.log('Validating check conclusion: ' + cr.completed_at);
+              console.log('Validating check conclusion: ' + cr.conclusion);
+              if(cr.conclusion != 'success') {
+                console.log('Discarding ' + branch + ' with check conclusion ' + cr.conclusion);
+                statusOK = false;
+              }
+            }
       - name: Wait for TOS to be approved
         run: |
-          CHECKS_LIST=$(gh api /repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}/check-runs --jq '.check_runs.[]')
+          let fs = require('fs');
+          let prNumber = Number(fs.readFileSync('build-metadata/pr-number.txt'));
+          CHECKS_LIST=$(gh api /repos/${{ github.repository }}issues/ --jq '.')
           echo $CHECKS_LIST
           exit 1
         env:
@@ -32,34 +71,24 @@ jobs:
           distribution: 'temurin'
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Download Build Metadata
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow: build-verification.yml
-          workflow_conclusion: completed
-      - name: Copy Build Metadata
-        run: |
-          ls -ltR build-metadata/
-          mkdir -p ~/.gradle/build-scan-data/
-          cp -r build-metadata/* ~/.gradle/build-scan-data/
       - name: Publish build scan
         run: ./gradlew buildScanPublishPrevious | tee build.out
         env:
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
       - name: Capture Build Scan link
+        id: capture-scan-link
         run: |
-          grep -A1 "Publishing build scan..." build.out  | tail -n 1 > build-scan-link.txt
-          cat build-scan-link.txt
+          echo "scan-link=$(grep -A1 "Publishing build scan..." build.out  | tail -n 1)" >> $GITHUB_OUTPUT
       - name: Comment PR
         uses: actions/github-script@v6
+        env:
+          pr: ${{ steps.load-metadata.outputs.pr }}
+          scan-link: ${{ steps.capture-scan-link.outputs.scan-link }}
         with:
           script: |
-            let fs = require('fs');
-            let prNumber = Number(fs.readFileSync('build-metadata/pr-number.txt'));
-            let buildScanLink = fs.readFileSync('build-scan-link.txt');
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-              body: `[Build Scan®](${buildScanLink})`
-            });
+            github.rest.issues.createComment({
+              issue_number: process.env.pr,
+              owner: context.owner,
+              repo: context.repo,
+              body: `[Build Scan®](${process.env.scan-link})`
+            })

@@ -21,9 +21,14 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Build with Gradle
         run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
-      - name: Save PR number
-        run: echo ${{ github.event.number }} > ~/.gradle/build-scan-data/pr-number.txt
       - name: Save Build Metadata
+        run: |
+          BUILD_PROPERTIES="~/.gradle/build-scan-data/build.properties"
+          mkdir -p "$(dirname -- ${BUILD_PROPERTIES})"
+          echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > ${BUILD_PROPERTIES}
+          echo "BUILD_PR=${{ github.event.number }}" >> ${BUILD_PROPERTIES}
+          cat ${BUILD_PROPERTIES}
+      - name: Upload Build Metadata
         uses: actions/upload-artifact@v3
         with:
           name: build-metadata
