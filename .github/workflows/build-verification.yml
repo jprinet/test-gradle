@@ -23,7 +23,7 @@ jobs:
         run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
       - name: Save Build Metadata
         env:
-          BUILD_SCAN_DATA_DIR: ~/.gradle/build-scan-data/
+          BUILD_SCAN_DATA_DIR: ~/.gradle/build-scan-data
         run: |
           mkdir -p ${{ env.BUILD_SCAN_DATA_DIR }}
           BUILD_PROPERTIES="${{ env.BUILD_SCAN_DATA_DIR }}/build.properties"
