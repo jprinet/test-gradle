@@ -48,7 +48,7 @@ jobs:
           script: |
             console.log('Polling CLA check...');
             attemptCount = 1;
-            while true; do
+            while (true) {
               console.log('Attempt ' + attemptCount++);
               const checkRuns = await github.request('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
                 ref: process.env.sha,
@@ -63,8 +63,8 @@ jobs:
                 }
               }
               sleep $WAIT_INTERVAL_SECS
-            done
-            return "false";
+            }
+            core.setFailed('CLA were not agreed')
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
