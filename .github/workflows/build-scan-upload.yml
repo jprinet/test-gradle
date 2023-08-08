@@ -92,8 +92,8 @@ jobs:
             const buildScanLink = process.env.scanlink;
             github.rest.issues.createComment({
               issue_number: prNumber,
-              owner: context.owner,
-              repo: context.repo,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               body: `[Build Scan®](${buildScanLink})`
             });
             //let prNumber = Number(process.env.pr);
