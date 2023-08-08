@@ -57,7 +57,7 @@ jobs:
               });
               // only the last result should be present
               for await (const cr of checkRuns.data.check_runs) {
-                if(cr.conclusion == 'success') {
+                if(cr.name == 'CLAAssistant' && cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
                   tosAgreed = "true";
                 }
