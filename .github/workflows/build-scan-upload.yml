@@ -23,12 +23,10 @@ jobs:
           workflow: build-verification.yml
           workflow_conclusion: completed
       - name: Restore Build Metadata
-        env:
-          BUILD_SCAN_DATA_DIR: "~/.gradle/build-scan-data/"
         run: |
           ls -ltR ${BUILD_METADATA_DIR}
-          mkdir -p ${BUILD_SCAN_DATA_DIR}
-          cp -r ${BUILD_METADATA_DIR}/* ${BUILD_SCAN_DATA_DIR}
+          mkdir -p ~/.gradle/build-scan-data/
+          cp -r ${BUILD_METADATA_DIR}/* ~/.gradle/build-scan-data/
       - name: Load Build metadata
         id: load-metadata
         run: |
