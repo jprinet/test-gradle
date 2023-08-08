@@ -57,6 +57,7 @@ jobs:
                 if(cr.name == 'CLAAssistant' && cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
                   tosAgreed = "true";
+                  break;
                 }
               }
             }
@@ -90,8 +91,8 @@ jobs:
           script: |
             const message = '[Build Scan®](' + process.env.scan-link + ')';
             github.rest.issues.createComment({
-              issue_number: process.env.pr,
+              issue_number: Number(process.env.pr),
               owner: context.owner,
               repo: context.repo,
               body: message
-            })
+            });
