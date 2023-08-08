@@ -35,9 +35,9 @@ jobs:
           source ${BUILD_METADATA_DIR}/build.properties
           echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
           echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
-      - name: Wait for successful completion of CLA workflow
+      - name: Wait for successful completion of TOS workflow
         uses: actions/github-script@v6
-        id: check-cla
+        id: check-tos
         env:
           sha: ${{ steps.load-metadata.outputs.sha }}
           pr: ${{ steps.load-metadata.outputs.pr }}
@@ -46,7 +46,7 @@ jobs:
           result-encoding: string
           script: |
             const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-            let claAgreed = "false";
+            let tosAgreed = "false";
 
             // Iterating until finding a successful CLA check
             for(let i = 1; i < 10 && claAgreed == "false"; i++, await delay(15000)) {
@@ -59,16 +59,14 @@ jobs:
               for await (const cr of checkRuns.data.check_runs) {
                 if(cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
-                  claAgreed = "true";
+                  tosAgreed = "true";
                 }
               }
             }
-            return claAgreed;
-      - name: Fail job if CLA are not agreed
-        run: |
-          echo ${{ steps.check-cla.outputs.result }}
-          exit 1
-        if: ${{ steps.check-cla.outputs.result == 'false' }}
+            return tosAgreed;
+      - name: Fail job if Terms Of Service are not agreed
+        run: exit 1
+        if: ${{ steps.check-tos.outputs.result == 'false' }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
