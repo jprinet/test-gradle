@@ -24,7 +24,6 @@ jobs:
           workflow_conclusion: completed
       - name: Restore Build Metadata
         run: |
-          ls -ltR ${BUILD_METADATA_DIR}
           mkdir -p ~/.gradle/build-scan-data/
           cp -r ${BUILD_METADATA_DIR}/* ~/.gradle/build-scan-data/
       - name: Load Build metadata
@@ -89,12 +88,13 @@ jobs:
           scanlink: ${{ steps.capture-scan-link.outputs.scan-link }}
         with:
           script: |
-            const message = '[Build Scan®](' + process.env.scanlink + ')';
+            const prNumber = Number(process.env.pr);
+            const buildScanLink = process.env.scanlink;
             github.rest.issues.createComment({
-              issue_number: Number(process.env.pr),
+              issue_number: prNumber,
               owner: context.owner,
               repo: context.repo,
-              body: message
+              body: `[Build Scan®](${buildScanLink})`
             });
             //let prNumber = Number(process.env.pr);
             //let buildScanLink = process.env.scanlink;
