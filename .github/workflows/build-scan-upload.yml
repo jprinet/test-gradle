@@ -35,38 +35,35 @@ jobs:
           source ${BUILD_METADATA_DIR}/build.properties
           echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
           echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
-      - name: Wait for completion of workflow dependencies
+      - name: Wait for successful completion of CLA workflow
         uses: actions/github-script@v6
         env:
           sha: ${{ steps.load-metadata.outputs.sha }}
           pr: ${{ steps.load-metadata.outputs.pr }}
+          WAIT_INTERVAL_SECS: 15
+        timeout-minutes: 2
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            statusOK = true;
-            const checkRuns = await github.request('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
-              ref: process.env.sha,
-              per_page: 1
-            });
-            for await (const cr of checkRuns.data.check_runs) {
-              console.log('Validating check conclusion: ' + cr.name);
-              console.log('Validating check conclusion: ' + cr.completed_at);
-              console.log('Validating check conclusion: ' + cr.conclusion);
-              if(cr.conclusion != 'success') {
-                console.log('check conclusion ' + cr.conclusion);
-                statusOK = false;
+            console.log('Polling CLA check...');
+            attemptCount = 1;
+            while true; do
+              console.log('Attempt ' + attemptCount++);
+              const checkRuns = await github.request('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
+                ref: process.env.sha,
+                per_page: 1
+              });
+              for await (const cr of checkRuns.data.check_runs) {
+                console.log('Validating check conclusion: ' + cr.name);
+                console.log('Validating check conclusion: ' + cr.conclusion);
+                if(cr.conclusion == 'success') {
+                  console.log('Successful execution found completed at ' + cr.completed_at);
+                  return true;
+                }
               }
-            }
-      - name: Wait for TOS to be approved
-        run: |
-          let fs = require('fs');
-          let prNumber = Number(fs.readFileSync('build-metadata/pr-number.txt'));
-          CHECKS_LIST=$(gh api /repos/${{ github.repository }}issues/ --jq '.')
-          echo $CHECKS_LIST
-          exit 1
-        env:
-          GH_TOKEN: ${{ github.token }}
-
+              sleep $WAIT_INTERVAL_SECS
+            done
+            return false;
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
