@@ -60,7 +60,6 @@ jobs:
                 if(cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
                   claAgreed = "true";
-                  break;
                 }
               }
             }
