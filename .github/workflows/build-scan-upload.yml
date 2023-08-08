@@ -68,7 +68,7 @@ jobs:
         run: |
           echo ${{ steps.check-cla.outputs.result }}
           exit 1
-        if: ${{ steps.check-cla.outputs.result == "false" }}
+        if: ${{ steps.check-cla.outputs.result == 'false' }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
