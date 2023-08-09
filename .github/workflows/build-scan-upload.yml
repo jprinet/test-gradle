@@ -20,8 +20,9 @@ jobs:
       - name: Download Build Metadata
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: build-verification.yml
-          workflow_conclusion: completed
+          run_id: ${{ github.event.workflow_run.id }}
+          #workflow: build-verification.yml
+          #workflow_conclusion: completed
       - name: Restore Build Metadata
         run: |
           mkdir -p ~/.gradle/build-scan-data/
