@@ -46,15 +46,11 @@ jobs:
             // Iterating until finding a successful CLA check
             for(let i = 1; i < 5 && tosAgreed == "false"; i++, await delay(15000)) {
               console.log('Attempt ' + i);
-              //const checkRuns = await github.request('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
-              //  ref: process.env.sha,
-              //  per_page: 100
-              //});
               const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
                 ref: process.env.sha,
-                per_page: 10
+                per_page: 50
               });
-              for await (const cr of checkRuns.data.check_runs) {
+              for await (const cr of checkRuns) {
                 console.log('Checking ' + cr.name+ ' completed at ' + cr.completed_at);
                 if(cr.name == 'CLAAssistant' && cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
