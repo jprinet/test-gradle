@@ -9,25 +9,25 @@ jobs:
   verification:
     name: Build Scan Upload
     runs-on: ubuntu-latest
-    env:
-      BUILD_METADATA_DIR: "build-metadata"
     permissions:
       pull-requests: write
     steps:
+      - name: Set environmental variables
+        run: |
+          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
+          echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
       - name: Download Build Metadata
         uses: dawidd6/action-download-artifact@v2
         with:
           run_id: ${{ github.event.workflow_run.id }}
-          #workflow: build-verification.yml
-          #workflow_conclusion: completed
       - name: Restore Build Metadata
         run: |
-          mkdir -p ~/.gradle/build-scan-data/
-          cp -r ${BUILD_METADATA_DIR}/* ~/.gradle/build-scan-data/
+          mkdir -p $BUILD_SCAN_DATA_DIR
+          cp -r $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
       - name: Load Build metadata
         id: load-metadata
         run: |
-          source ${BUILD_METADATA_DIR}/build.properties
+          source $BUILD_METADATA_DIR/build.properties
           echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
           echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
       - name: Wait for successful completion of TOS workflow
@@ -51,7 +51,6 @@ jobs:
                 per_page: 50
               });
               for await (const cr of checkRuns) {
-                console.log('Checking ' + cr.name+ ' completed at ' + cr.completed_at);
                 if(cr.name == 'CLAAssistant' && cr.conclusion == 'success') {
                   console.log('Successful execution found completed at ' + cr.completed_at);
                   tosAgreed = "true";

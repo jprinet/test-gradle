@@ -7,6 +7,11 @@ jobs:
     name: Verification
     runs-on: ubuntu-latest
     steps:
+      - name: Set environmental variables
+        run: |
+          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
+          echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
+          echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
@@ -19,15 +24,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
       - name: Save Build Metadata
-        env:
-          BUILD_SCAN_DATA_DIR: ~/.gradle/build-scan-data
         run: |
-          mkdir -p ~/.gradle/build-scan-data
-          BUILD_PROPERTIES="${{ env.BUILD_SCAN_DATA_DIR }}/build.properties"
-          echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > ~/.gradle/build-scan-data/build.properties
-          echo "BUILD_PR=${{ github.event.number }}" >> ~/.gradle/build-scan-data/build.properties
-          ls -ltR ~/.gradle/build-scan-data
-          cat ~/.gradle/build-scan-data/build.properties
+          mkdir -p $BUILD_SCAN_DATA_DIR
+          echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_SCAN_DATA_DIR/$BUILD_PROPERTIES
+          echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_SCAN_DATA_DIR/$BUILD_PROPERTIES
       - name: Upload Build Metadata
         uses: actions/upload-artifact@v3
         with:
