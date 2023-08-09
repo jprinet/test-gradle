@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Set environmental variables
         run: |
-          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
+          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
           echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
       - name: Download Build Metadata
         uses: dawidd6/action-download-artifact@v2
@@ -73,25 +73,36 @@ jobs:
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
       - name: Publish build scan
-        run: ./gradlew buildScanPublishPrevious | tee build.out
+        id: publish
+        run: |
+          nbScans=$(find ~/.gradle/build-scan-data/*/previous/* -type d | wc -l)
+          scanlinks=""
+          for ((c=1; c <= $nbScans; c++ ))
+          do
+            echo "BUILD SCAN PUBLICATION $c/$nbScans"
+            ./gradlew buildScanPublishPrevious | tee build.out
+            scanlinks=$(grep -A1 "Publishing build scan..." build.out  | tail -n 1),${scanlinks}
+          done
+          echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
         env:
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-      - name: Capture Build Scan link
-        id: capture-scan-link
-        run: |
-          echo "scan-link=$(grep -A1 "Publishing build scan..." build.out  | tail -n 1)" >> $GITHUB_OUTPUT
       - name: Comment PR
         uses: actions/github-script@v6
         env:
           pr: ${{ steps.load-metadata.outputs.pr }}
-          scanlink: ${{ steps.capture-scan-link.outputs.scan-link }}
+          scanlinks: ${{ steps.publish.outputs.scanlinks }}
         with:
           script: |
             const prNumber = Number(process.env.pr);
-            const buildScanLink = process.env.scanlink;
-            github.rest.issues.createComment({
-              issue_number: prNumber,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `[Build Scan®](${buildScanLink})`
-            });
+            const buildScanLinksAsArray = process.env.scanlinks.split(',');
+
+            for(var i = 0; i < buildScanLinksAsArray.length; i++) {
+              if(buildScanLinksAsArray[i].length > 0) {
+                github.rest.issues.createComment({
+                  issue_number: prNumber,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: `[Build Scan®](${buildScanLinksAsArray[i]})`
+                });
+              }
+            }
