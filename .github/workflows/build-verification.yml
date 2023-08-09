@@ -1,12 +1,22 @@
-name: Verify Build
+name: PR Build
 
-on: [ push, pull_request, workflow_dispatch ]
+on: [ pull_request ]
 
 jobs:
   verification:
     name: Verification
     runs-on: ubuntu-latest
     steps:
+      - name: Set environmental variables
+        run: |
+          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
+          echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
+          echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
+      - name: Save Build Metadata
+        run: |
+          mkdir -p $BUILD_METADATA_DIR
+          echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_METADATA_DIR/$BUILD_PROPERTIES
+          echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_METADATA_DIR/$BUILD_PROPERTIES
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
@@ -16,11 +26,21 @@ jobs:
           distribution: 'temurin'
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Leak secret
-        run: echo ${FOO}
-        env:
-          FOO: ${{ secrets.FOO }}
-      - name: Build with Gradle
+      - name: Build with Gradle 1
+        run: ./gradlew tasks
+      - name: Save Build Scan 1
+        run: |
+          cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+          ls -ltR $BUILD_METADATA_DIR
+      - name: Build with Gradle 2
         run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
-        env:
-          GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+      - name: Save Build Scan 2
+        run: |
+          cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+          ls -ltR $BUILD_METADATA_DIR
+      - name: Upload Build Metadata
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-metadata
+          path: |
+            ~/build-metadata
