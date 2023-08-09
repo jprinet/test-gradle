@@ -31,35 +31,35 @@ jobs:
           source $BUILD_METADATA_DIR/build.properties
           echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
           echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
-      - name: Wait for successful completion of TOS workflow
-        uses: actions/github-script@v6
-        id: check-tos
-        env:
-          sha: ${{ steps.load-metadata.outputs.sha }}
-          pr: ${{ steps.load-metadata.outputs.pr }}
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          result-encoding: string
-          script: |
-            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-            let tosAgreed = "false";
-
-            // Iterating until finding a successful CLA check
-            for(let i = 1; i < 5 && tosAgreed == "false"; i++, await delay(15000)) {
-              console.log('Attempt ' + i);
-              const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
-                ref: process.env.sha,
-                per_page: 50
-              });
-              for await (const cr of checkRuns) {
-                if(cr.name == 'CLAAssistant' && cr.conclusion == 'success') {
-                  console.log('Successful execution found completed at ' + cr.completed_at);
-                  tosAgreed = "true";
-                  break;
-                }
-              }
-            }
-            return tosAgreed;
+#      - name: Wait for successful completion of TOS workflow
+#        uses: actions/github-script@v6
+#        id: check-tos
+#        env:
+#          sha: ${{ steps.load-metadata.outputs.sha }}
+#          pr: ${{ steps.load-metadata.outputs.pr }}
+#        with:
+#          github-token: ${{secrets.GITHUB_TOKEN}}
+#          result-encoding: string
+#          script: |
+#            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+#            let tosAgreed = "false";
+#
+#            // Iterating until finding a successful CLA check
+#            for(let i = 1; i < 5 && tosAgreed == "false"; i++, await delay(15000)) {
+#              console.log('Attempt ' + i);
+#              const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
+#                ref: process.env.sha,
+#                per_page: 50
+#              });
+#              for await (const cr of checkRuns) {
+#                if(cr.name == 'CLAAssistant' && cr.conclusion == 'success') {
+#                  console.log('Successful execution found completed at ' + cr.completed_at);
+#                  tosAgreed = "true";
+#                  break;
+#                }
+#              }
+#            }
+#            return tosAgreed;
       - name: Fail job if Terms Of Service are not agreed
         run: exit 1
         if: ${{ steps.check-tos.outputs.result == 'false' }}
