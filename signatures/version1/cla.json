@@ -1,8 +1,8 @@
 {
   "signedContributors": [
       {
-          "name": "jprinet-jfrog",
-          "id": 76202438,
+          "name": "foo",
+          "id": 42,
           "comment_id": 1671330579,
           "created_at": "2023-08-09T13:29:28Z",
           "repoId": 674311950,
