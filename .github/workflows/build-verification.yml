@@ -2,9 +2,6 @@ name: PR Build
 
 on: [ pull_request ]
 
-concurrency:
-    group: pr
-
 jobs:
   verification:
     name: Verification
