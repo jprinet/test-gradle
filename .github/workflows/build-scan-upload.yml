@@ -24,6 +24,7 @@ jobs:
         run: |
           mkdir -p $BUILD_SCAN_DATA_DIR
           cp -r $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
+          ls -ltR $BUILD_SCAN_DATA_DIR
       - name: Load Build metadata
         id: load-metadata
         run: |

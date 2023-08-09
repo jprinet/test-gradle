@@ -11,7 +11,12 @@ jobs:
         run: |
           echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
           echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
-          echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
+          echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
+      - name: Save Build Metadata
+        run: |
+          mkdir -p $BUILD_METADATA_DIR
+          echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_METADATA_DIR/$BUILD_PROPERTIES
+          echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_METADATA_DIR/$BUILD_PROPERTIES
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
@@ -21,16 +26,21 @@ jobs:
           distribution: 'temurin'
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Build with Gradle
-        run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
-      - name: Save Build Metadata
+      - name: Build with Gradle 1
+        run: ./gradlew tasks
+      - name: Save Build Scan 1
         run: |
-          mkdir -p $BUILD_SCAN_DATA_DIR
-          echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_SCAN_DATA_DIR/$BUILD_PROPERTIES
-          echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_SCAN_DATA_DIR/$BUILD_PROPERTIES
+          cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+          ls -ltR $BUILD_METADATA_DIR
+      - name: Build with Gradle 2
+        run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
+      - name: Save Build Scan 2
+        run: |
+          cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+          ls -ltR $BUILD_METADATA_DIR
       - name: Upload Build Metadata
         uses: actions/upload-artifact@v3
         with:
           name: build-metadata
           path: |
-            ~/.gradle/build-scan-data/
+            ~/build-metadata
