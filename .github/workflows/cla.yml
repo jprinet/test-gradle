@@ -22,6 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
           custom-notsigned-prcomment: 'Please accept [Gradle Enterprise Terms Of Service](https://gradle.com/legal/gradle-enterprise-software-agreement/) to get your PR build scan published by commenting this PR with the following message:'
           custom-pr-sign-comment: 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms'
           custom-allsigned-prcomment: 'All Contributors have accepted Gradle Enterprise Terms Of Service.'
