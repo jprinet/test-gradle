@@ -77,11 +77,11 @@ jobs:
         run: |
           nbScans=$(find ~/.gradle/build-scan-data/*/previous/* -type d | wc -l)
           scanlinks=""
-          for ((c=1; c <= $nbScans; c++ ))
+          for ((i=1; i <= $nbScans; i++ ))
           do
-            echo "BUILD SCAN PUBLICATION $c/$nbScans"
+            echo "BUILD SCAN PUBLICATION $i/$nbScans"
             ./gradlew buildScanPublishPrevious | tee build.out
-            scanlinks=$(grep -A1 "Publishing build scan..." build.out  | tail -n 1),${scanlinks}
+            scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1))"
           done
           echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
         env:
@@ -94,15 +94,13 @@ jobs:
         with:
           script: |
             const prNumber = Number(process.env.pr);
-            const buildScanLinksAsArray = process.env.scanlinks.split(',');
+            const message = process.env.scanlinks;
 
-            for(var i = 0; i < buildScanLinksAsArray.length; i++) {
-              if(buildScanLinksAsArray[i].length > 0) {
-                github.rest.issues.createComment({
-                  issue_number: prNumber,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  body: `[Build Scan®](${buildScanLinksAsArray[i]})`
-                });
-              }
+            if(message.length > 0) {
+              github.rest.issues.createComment({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: message
+              });
             }
