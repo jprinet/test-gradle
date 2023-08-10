@@ -83,7 +83,7 @@ jobs:
             echo "BUILD SCAN PUBLICATION $i/$nbScans"
             ./gradlew buildScanPublishPrevious | tee build.out
             #mvn gradle-enterprise:build-scan-publish-previous | tee build.out
-            scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1))"
+            scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //'))"
           done
           echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
         env:
