@@ -14,8 +14,8 @@ jobs:
     steps:
       - name: Set environmental variables
         run: |
-          #echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
-          echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
+          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
+          #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/" >> $GITHUB_ENV
           echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
       - name: Download Build Metadata
         uses: dawidd6/action-download-artifact@v2
@@ -25,42 +25,41 @@ jobs:
         run: |
           mkdir -p $BUILD_SCAN_DATA_DIR
           cp -r $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
-          ls -ltR $BUILD_SCAN_DATA_DIR
       - name: Load Build metadata
         id: load-metadata
         run: |
           source $BUILD_METADATA_DIR/build.properties
           echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
           echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
-#      - name: Wait for successful completion of TOS workflow
-#        uses: actions/github-script@v6
-#        id: check-tos
-#        env:
-#          sha: ${{ steps.load-metadata.outputs.sha }}
-#          pr: ${{ steps.load-metadata.outputs.pr }}
-#        with:
-#          github-token: ${{secrets.GITHUB_TOKEN}}
-#          result-encoding: string
-#          script: |
-#            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-#            let tosAgreed = "false";
-#
-#            // Iterating until finding a successful CLA check
-#            for(let i = 1; i < 5 && tosAgreed == "false"; i++, await delay(15000)) {
-#              console.log('Attempt ' + i);
-#              const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
-#                ref: process.env.sha,
-#                per_page: 50
-#              });
-#              for await (const cr of checkRuns) {
-#                if(cr.name == 'CLAAssistant' && cr.conclusion == 'success') {
-#                  console.log('Successful execution found completed at ' + cr.completed_at);
-#                  tosAgreed = "true";
-#                  break;
-#                }
-#              }
-#            }
-#            return tosAgreed;
+      - name: Wait for successful completion of TOS workflow
+        uses: actions/github-script@v6
+        id: check-tos
+        env:
+          sha: ${{ steps.load-metadata.outputs.sha }}
+          pr: ${{ steps.load-metadata.outputs.pr }}
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          result-encoding: string
+          script: |
+            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+            let tosAgreed = "false";
+
+            // Iterating until finding a successful CLA check
+            for(let i = 1; i < 5 && tosAgreed == "false"; i++, await delay(15000)) {
+              console.log('Attempt ' + i);
+              const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
+                ref: process.env.sha,
+                per_page: 50
+              });
+              for await (const cr of checkRuns) {
+                if(cr.name == 'CLAAssistant' && cr.conclusion == 'success') {
+                  console.log('Successful execution found completed at ' + cr.completed_at);
+                  tosAgreed = "true";
+                  break;
+                }
+              }
+            }
+            return tosAgreed;
       - name: Fail job if Terms Of Service are not agreed
         run: exit 1
         if: ${{ steps.check-tos.outputs.result == 'false' }}
@@ -77,12 +76,13 @@ jobs:
         id: publish
         run: |
           nbScans=$(find ~/.gradle/build-scan-data/*/previous/* -type d | wc -l)
+          #nbScans=$(find ~/.m2/.gradle-enterprise/build-scan-data/*/previous/* -type d | wc -l)
           scanlinks=""
           for ((i=1; i <= $nbScans; i++ ))
           do
             echo "BUILD SCAN PUBLICATION $i/$nbScans"
-            #./gradlew buildScanPublishPrevious | tee build.out
-            mvn gradle-enterprise:build-scan-publish-previous | tee build.out
+            ./gradlew buildScanPublishPrevious | tee build.out
+            #mvn gradle-enterprise:build-scan-publish-previous | tee build.out
             scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1))"
           done
           echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
