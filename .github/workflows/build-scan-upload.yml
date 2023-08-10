@@ -14,7 +14,8 @@ jobs:
     steps:
       - name: Set environmental variables
         run: |
-          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
+          #echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
+          echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
           echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
       - name: Download Build Metadata
         uses: dawidd6/action-download-artifact@v2
@@ -80,7 +81,8 @@ jobs:
           for ((i=1; i <= $nbScans; i++ ))
           do
             echo "BUILD SCAN PUBLICATION $i/$nbScans"
-            ./gradlew buildScanPublishPrevious | tee build.out
+            #./gradlew buildScanPublishPrevious | tee build.out
+            mvn gradle-enterprise:build-scan-publish-previous | tee build.out
             scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1))"
           done
           echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
