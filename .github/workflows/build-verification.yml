@@ -9,7 +9,8 @@ jobs:
     steps:
       - name: Set environmental variables
         run: |
-          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
+          #echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
+          echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
           echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
           echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
       - name: Save Build Metadata
@@ -26,14 +27,18 @@ jobs:
           distribution: 'temurin'
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Build with Gradle 1
-        run: ./gradlew tasks
+#      - name: Build with Gradle 1
+#        run: ./gradlew tasks
+      - name: Build with Maven 1
+        run: mvn clean
       - name: Save Build Scan 1
         run: |
           cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
           ls -ltR $BUILD_METADATA_DIR
-      - name: Build with Gradle 2
-        run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
+#      - name: Build with Gradle 2
+#        run: ./gradlew build -x signPluginMavenPublication -i -Porg.gradle.java.installations.auto-download=false
+      - name: Build with Maven 2
+        run: mvn initialize
       - name: Save Build Scan 2
         run: |
           cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
