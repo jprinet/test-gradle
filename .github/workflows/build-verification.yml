@@ -107,11 +107,17 @@ jobs:
             - name: Build with Gradle 1
               run: ./gradlew help -Dscan.tag.test -Dscan.value.version=${{ matrix.version }}
             - name: Save Build Scan 1
-              run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+              run: |
+                ls -ltR $BUILD_SCAN_DATA_DIR
+                cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+                ls -ltR $BUILD_METADATA_DIR
             - name: Build with Gradle 2
               run: ./gradlew tasks -Dscan.tag.test -Dscan.tag.version=${{ matrix.version }}
             - name: Save Build Scan 2
-              run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+              run: |
+                ls -ltR $BUILD_SCAN_DATA_DIR
+                cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+                ls -ltR $BUILD_METADATA_DIR
             - name: Upload Build Metadata
               uses: actions/upload-artifact@v3
               with:
