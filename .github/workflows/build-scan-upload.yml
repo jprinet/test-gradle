@@ -15,8 +15,8 @@ jobs:
       - name: Set environmental variables
         run: |
           echo "FROM FORK"
-          #echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
-          echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/" >> $GITHUB_ENV
+          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
+          #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/" >> $GITHUB_ENV
           echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
       - name: Download Build Metadata
         uses: dawidd6/action-download-artifact@v2
@@ -24,7 +24,9 @@ jobs:
           run_id: ${{ github.event.workflow_run.id }}
       - name: Restore Build Metadata
         run: |
+          ls -ltR $BUILD_METADATA_DIR
           mkdir -p $BUILD_SCAN_DATA_DIR
+          cp -r $BUILD_METADATA_DIR-*/* $BUILD_METADATA_DIR
           cp -r $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
           ls -ltR $BUILD_SCAN_DATA_DIR
       - name: Load Build metadata
@@ -77,15 +79,15 @@ jobs:
       - name: Publish build scan
         id: publish
         run: |
-          #nbScans=$(find ~/.gradle/build-scan-data/*/previous/* -type d | wc -l)
-          nbScans=$(find ~/.m2/.gradle-enterprise/build-scan-data/*/previous/* -type d | wc -l)
+          nbScans=$(find ~/.gradle/build-scan-data/*/previous/* -type d | wc -l)
+          #nbScans=$(find ~/.m2/.gradle-enterprise/build-scan-data/*/previous/* -type d | wc -l)
 
           scanlinks=""
           for ((i=1; i <= $nbScans; i++ ))
           do
             echo "BUILD SCAN PUBLICATION $i/$nbScans"
-            #./gradlew buildScanPublishPrevious | tee build.out
-            mvn gradle-enterprise:build-scan-publish-previous | tee build.out
+            ./gradlew buildScanPublishPrevious | tee build.out
+            #mvn gradle-enterprise:build-scan-publish-previous | tee build.out
             scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //'))"
           done
           echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
