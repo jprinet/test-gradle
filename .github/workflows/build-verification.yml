@@ -13,9 +13,9 @@ jobs:
                   #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
                   echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                   echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
-                  mkdir -p $BUILD_METADATA_DIR
             - name: Save Build Metadata
               run: |
+                  mkdir -p $BUILD_METADATA_DIR
                   echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_METADATA_DIR/$BUILD_PROPERTIES
                   echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_METADATA_DIR/$BUILD_PROPERTIES
             - name: Checkout
@@ -57,7 +57,7 @@ jobs:
                   #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
                   echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                   echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
-                  mkdir -p $BUILD_METADATA_DIR
+                  mkdir -p $HOME/build-metadata
             - name: Checkout
               uses: actions/checkout@v3
             - name: Set up JDK 8
@@ -96,7 +96,7 @@ jobs:
                   #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
                   echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                   echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
-                  mkdir -p $BUILD_METADATA_DIR
+                  mkdir -p $HOME/build-metadata
             - name: Checkout
               uses: actions/checkout@v3
             - name: Set up JDK 8
