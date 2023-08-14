@@ -30,7 +30,7 @@ jobs:
       - name: Load Build metadata
         id: load-metadata
         run: |
-          source $BUILD_METADATA_DIR/build.properties
+          source $BUILD_METADATA_DIR-*/build.properties
           echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
           echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
 #      - name: Wait for successful completion of TOS workflow
