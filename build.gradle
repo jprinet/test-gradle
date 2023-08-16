@@ -14,6 +14,8 @@ group = 'com.gradle'
 version = releaseVersion.get()
 description = 'A Gradle plugin to capture common custom user data used for Gradle Build Scans in Gradle Enterprise'
 
+println "I'm in a fork!!!"
+
 repositories {
     gradlePluginPortal()
 }

@@ -1,9 +1,9 @@
 name: "CLA Assistant"
 on:
-  issue_comment:
-    types: [created]
-  pull_request_target:
-    types: [opened,closed,synchronize]
+    issue_comment:
+        types: [created]
+    pull_request_target:
+        types: [opened,closed,synchronize]
 
 # explicitly configure permissions, in case your GITHUB_TOKEN workflow permissions are set to read-only in repository settings
 permissions:
@@ -13,18 +13,16 @@ permissions:
     statuses: write
 
 jobs:
-  CLAAssistant:
-    runs-on: ubuntu-latest
-    steps:
-      - name: "CLA Assistant"
-        if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms') || github.event_name == 'pull_request_target'
-        uses: contributor-assistant/github-action@v2.3.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          path-to-signatures: 'signatures/version1/cla.json'
-          path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
-          branch: main
-          custom-pr-sign-comment: 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms'
-          custom-notsigned-prcomment: 'Please accept [Gradle Enterprise Terms Of Service](https://gradle.com/legal/gradle-enterprise-software-agreement/) to get your PR build scan published by commenting this PR with the following message:'
-          custom-allsigned-prcomment: 'All Contributors have accepted Gradle Enterprise Terms Of Service.'
+    CLAAssistant:
+        runs-on: ubuntu-latest
+        steps:
+            - name: "CLA Assistant"
+              if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms') || github.event_name == 'pull_request_target'
+              uses: contributor-assistant/github-action@v2.3.0
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
+                  custom-notsigned-prcomment: 'Please accept [Gradle Enterprise Terms Of Service](https://gradle.com/legal/gradle-enterprise-software-agreement/) to get your PR build scan published by commenting this PR with the following message:'
+                  custom-pr-sign-comment: 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms'
+                  custom-allsigned-prcomment: 'All Contributors have accepted Gradle Enterprise Terms Of Service.'

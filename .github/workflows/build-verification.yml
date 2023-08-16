@@ -9,7 +9,7 @@ jobs:
         steps:
             - name: Set environmental variables
               run: |
-                  echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
+                  echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
                   #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
                   echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                   echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
@@ -53,11 +53,10 @@ jobs:
         steps:
             - name: Set environmental variables
               run: |
-                  echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
+                  echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
                   #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
                   echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                   echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
-                  mkdir -p $HOME/build-metadata
             - name: Checkout
               uses: actions/checkout@v3
             - name: Set up JDK 8
@@ -92,11 +91,10 @@ jobs:
         steps:
             - name: Set environmental variables
               run: |
-                  echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
+                  echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
                   #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
                   echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                   echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
-                  mkdir -p $HOME/build-metadata
             - name: Checkout
               uses: actions/checkout@v3
             - name: Set up JDK 8
@@ -109,17 +107,11 @@ jobs:
             - name: Build with Gradle 1
               run: ./gradlew help -Dscan.tag.test -Dscan.value.version=${{ matrix.version }}
             - name: Save Build Scan 1
-              run: |
-                ls -ltR $BUILD_SCAN_DATA_DIR
-                cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
-                ls -ltR $BUILD_METADATA_DIR
+              run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
             - name: Build with Gradle 2
               run: ./gradlew tasks -Dscan.tag.test -Dscan.tag.version=${{ matrix.version }}
             - name: Save Build Scan 2
-              run: |
-                ls -ltR $BUILD_SCAN_DATA_DIR
-                cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
-                ls -ltR $BUILD_METADATA_DIR
+              run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
             - name: Upload Build Metadata
               uses: actions/upload-artifact@v3
               with:
