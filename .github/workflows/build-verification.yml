@@ -3,118 +3,122 @@ name: PR Build
 on: [ pull_request ]
 
 jobs:
-  init:
-    name: Init
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set environmental variables
-        run: |
-          echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
-          #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
-          echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
-          echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
-      - name: Save Build Metadata
-        run: |
-          mkdir -p $BUILD_METADATA_DIR
-          echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_METADATA_DIR/$BUILD_PROPERTIES
-          echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_METADATA_DIR/$BUILD_PROPERTIES
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Set up JDK 8
-        uses: actions/setup-java@v3
-        with:
-          java-version: '8'
-          distribution: 'temurin'
-      - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
-      - name: Build with Gradle 1
-        run: ./gradlew help -Dscan.tag.init
-#      - name: Build with Maven 1
-#        run: mvn clean
-      - name: Save Build Scan 1
-        run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
-      - name: Build with Gradle 2
-        run: ./gradlew tasks -Dscan.tag.init
-#      - name: Build with Maven 2
-#        run: mvn initialize
-      - name: Save Build Scan 2
-        run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
-      - name: Upload Build Metadata
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-metadata-verification
-          path: |
-            ~/build-metadata
+    init:
+        name: Init
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set environmental variables
+              run: |
+                  echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
+                  #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
+                  echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
+                  echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
+            - name: Save Build Metadata
+              run: |
+                  mkdir -p $BUILD_METADATA_DIR
+                  echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_METADATA_DIR/$BUILD_PROPERTIES
+                  echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_METADATA_DIR/$BUILD_PROPERTIES
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Set up JDK 8
+              uses: actions/setup-java@v3
+              with:
+                  java-version: '8'
+                  distribution: 'temurin'
+            - name: Set up Gradle
+              uses: gradle/gradle-build-action@v2
+            - name: Build with Gradle 1
+              run: ./gradlew help -Dscan.tag.init
+            #      - name: Build with Maven 1
+            #        run: mvn clean
+            - name: Save Build Scan 1
+              run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+            - name: Build with Gradle 2
+              run: ./gradlew tasks -Dscan.tag.init
+            #      - name: Build with Maven 2
+            #        run: mvn initialize
+            - name: Save Build Scan 2
+              run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+            - name: Upload Build Metadata
+              uses: actions/upload-artifact@v3
+              with:
+                  name: build-metadata-verification
+                  path: |
+                      ~/build-metadata
 
-  build:
-    name: Build
-    needs: Init
-    runs-on: ubuntu-latest
-    steps:
-        - name: Set environmental variables
-          run: |
-              echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
-              #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
-              echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
-              echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
-        - name: Checkout
-          uses: actions/checkout@v3
-        - name: Set up JDK 8
-          uses: actions/setup-java@v3
-          with:
-              java-version: '8'
-              distribution: 'temurin'
-        - name: Set up Gradle
-          uses: gradle/gradle-build-action@v2
-        - name: Build with Gradle 1
-          run: ./gradlew help -Dscan.tag.build
-        - name: Save Build Scan 1
-          run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
-        - name: Build with Gradle 2
-          run: ./gradlew tasks -Dscan.tag.build
-        - name: Save Build Scan 2
-          run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
-        - name: Upload Build Metadata
-          uses: actions/upload-artifact@v3
-          with:
-              name: build-metadata-build
-              path: |
-                  ~/build-metadata
+    build:
+        name: Build
+        needs: Init
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set environmental variables
+              run: |
+                  echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
+                  #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
+                  echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
+                  echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
+                  mkdir -p $HOME/build-metadata
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Set up JDK 8
+              uses: actions/setup-java@v3
+              with:
+                  java-version: '8'
+                  distribution: 'temurin'
+            - name: Set up Gradle
+              uses: gradle/gradle-build-action@v2
+            - name: Build with Gradle 1
+              run: ./gradlew help -Dscan.tag.build
+            - name: Save Build Scan 1
+              run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+            - name: Build with Gradle 2
+              run: ./gradlew tasks -Dscan.tag.build
+            - name: Save Build Scan 2
+              run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+            - name: Upload Build Metadata
+              uses: actions/upload-artifact@v3
+              with:
+                  name: build-metadata-build
+                  path: |
+                      ~/build-metadata
 
-  test-matrix:
-      name: test-matrix
-      strategy:
-          matrix:
-            version: [42, 142, 1042]
-      needs: Build
-      runs-on: ubuntu-latest
-      steps:
-          - name: Set environmental variables
-            run: |
-                echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/" >> $GITHUB_ENV
-                #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
-                echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
-                echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
-          - name: Checkout
-            uses: actions/checkout@v3
-          - name: Set up JDK 8
-            uses: actions/setup-java@v3
-            with:
-                java-version: '8'
-                distribution: 'temurin'
-          - name: Set up Gradle
-            uses: gradle/gradle-build-action@v2
-          - name: Build with Gradle 1
-            run: ./gradlew help -Dscan.tag.test -Dscan.value.version=${{ matrix.version }}
-          - name: Save Build Scan 1
-            run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
-          - name: Build with Gradle 2
-            run: ./gradlew tasks -Dscan.tag.test -Dscan.tag.version=${{ matrix.version }}
-          - name: Save Build Scan 2
-            run: cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
-          - name: Upload Build Metadata
-            uses: actions/upload-artifact@v3
-            with:
-                name: build-metadata-test-${{ matrix.version }}
-                path: |
-                    ~/build-metadata
+    test-matrix:
+        name: test-matrix
+        strategy:
+            matrix:
+                version: [42, 142, 1042]
+        needs: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Set environmental variables
+              run: |
+                  echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
+                  #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
+                  echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
+                  echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
+                  mkdir -p $HOME/build-metadata
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Set up JDK 8
+              uses: actions/setup-java@v3
+              with:
+                  java-version: '8'
+                  distribution: 'temurin'
+            - name: Set up Gradle
+              uses: gradle/gradle-build-action@v2
+            - name: Build with Gradle 1
+              run: ./gradlew help -Dscan.tag.test -Dscan.value.version=${{ matrix.version }}
+            - name: Save Build Scan 1
+              run: |
+                  cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+            - name: Build with Gradle 2
+              run: ./gradlew tasks -Dscan.tag.test -Dscan.tag.version=${{ matrix.version }}
+            - name: Save Build Scan 2
+              run: |
+                  cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+            - name: Upload Build Metadata
+              uses: actions/upload-artifact@v3
+              with:
+                  name: build-metadata-test-${{ matrix.version }}
+                  path: |
+                      ~/build-metadata
