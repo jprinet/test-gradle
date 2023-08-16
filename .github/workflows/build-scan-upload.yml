@@ -14,7 +14,7 @@ jobs:
         steps:
             - name: Set environmental variables
               run: |
-                  echo "FROM ORIGIN"
+                  echo "FROM FORK"
                   echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
                   #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/" >> $GITHUB_ENV
                   echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV

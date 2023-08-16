@@ -18,7 +18,7 @@ repositories {
     gradlePluginPortal()
 }
 
-println "I'm in ORIGIN"
+println "I'm in FORK"
 
 dependencies {
     compileOnly 'com.gradle:gradle-enterprise-gradle-plugin:3.14.1'
