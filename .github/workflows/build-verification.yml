@@ -9,7 +9,7 @@ jobs:
         steps:
             - name: Set environmental variables
               run: |
-                  echo "FROM ORIGIN REPO"
+                  echo "FROM ORIGIN"
                   echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
                   #echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
                   echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
