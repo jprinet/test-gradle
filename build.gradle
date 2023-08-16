@@ -18,6 +18,8 @@ repositories {
     gradlePluginPortal()
 }
 
+println "I'm in ORIGIN!!!"
+
 dependencies {
     compileOnly 'com.gradle:gradle-enterprise-gradle-plugin:3.14.1'
     testImplementation(platform('org.junit:junit-bom:5.10.0'))
