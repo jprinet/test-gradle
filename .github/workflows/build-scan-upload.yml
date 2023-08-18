@@ -13,6 +13,6 @@ jobs:
             pull-requests: write
         steps:
             -   name: "Gradle Enterprise Build Scan upload"
-                uses: actions/build-scan-upload@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-upload@v1
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

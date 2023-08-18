@@ -72,8 +72,8 @@ jobs:
             -   name: Build with Gradle 1
                 run: ./gradlew help -Dscan.tag.test -Dscan.value.version=${{ matrix.version }}
             -   name: Save Build Scan 1
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
             -   name: Build with Gradle 2
                 run: ./gradlew tasks -Dscan.tag.test -Dscan.tag.version=${{ matrix.version }}
             -   name: Save Build Scan 2
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
