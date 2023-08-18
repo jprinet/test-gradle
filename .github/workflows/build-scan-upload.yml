@@ -19,6 +19,7 @@ jobs:
                     ge-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
             -   name: "Gradle Enterprise Build Scan upload for Maven"
                 uses: jprinet/test-gradle/.github/actions/build-scan-upload@v1
+                if: always()
                 with:
                     token: ${{ secrets.GITHUB_TOKEN }}
                     ge-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
