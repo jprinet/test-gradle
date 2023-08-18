@@ -105,7 +105,12 @@ runs:
                   else
                       (mvn gradle-enterprise:build-scan-publish-previous || true) 1> build.out
                   fi
-                  scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //'))"
+                  scanLink=$(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //')
+                  echo "Found scan link $scanLink"
+                  if [[ ! -z "$scanLink" ]]
+                  then
+                    scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($scanLink)"
+                  fi
                 done
                 echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
             env:
