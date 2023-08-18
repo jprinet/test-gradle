@@ -1,6 +1,11 @@
 name: 'Gradle Enterprise - Terms of Service approval verification'
 description: 'Approve Gradle Enterprise Terms of Service'
 
+inputs:
+    token:
+        description: "GitHub token"
+        required: false
+
 runs:
     using: "composite"
     steps:
@@ -8,7 +13,7 @@ runs:
             if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms') || github.event_name == 'pull_request_target'
             uses: contributor-assistant/github-action@v2.3.0
             env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                GITHUB_TOKEN: ${{ inputs.token }}
             with:
                 path-to-signatures: 'signatures/version1/gradle-enterprise.json'
                 path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'

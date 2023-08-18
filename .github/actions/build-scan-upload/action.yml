@@ -5,6 +5,12 @@ inputs:
     build-tool:
         description: 'Build tool [gradle|maven]'
         default: 'gradle'
+    token:
+        description: "GitHub token"
+        required: false
+    ge-access-key:
+        description: "GE access key"
+        required: false
 
 runs:
     using: "composite"
@@ -40,7 +46,7 @@ runs:
                 sha: ${{ steps.load-metadata.outputs.sha }}
                 pr: ${{ steps.load-metadata.outputs.pr }}
             with:
-                github-token: ${{secrets.GITHUB_TOKEN}}
+                github-token: ${{inputs.token}}
                 result-encoding: string
                 script: |
                     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -99,7 +105,7 @@ runs:
                 done
                 echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
             env:
-                GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+                GRADLE_ENTERPRISE_ACCESS_KEY: ${{ inputs.ge-access-key }}
         -   name: Comment PR
             uses: actions/github-script@v6
             env:

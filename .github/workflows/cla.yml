@@ -17,5 +17,5 @@ jobs:
         steps:
             -   name: "Gradle Enterprise TOS"
                 uses: jprinet/test-gradle/.github/actions/build-scan-tos@v1
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    token: ${{ secrets.GITHUB_TOKEN }}
