@@ -21,7 +21,7 @@ jobs:
             -   name: Build with Maven 1
                 run: mvn clean
             -   name: Save Build Scan 1
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
                 with:
                     build-tool: "maven"
             #-   name: Build with Gradle 2
@@ -29,7 +29,7 @@ jobs:
             -   name: Build with Maven 2
                 run: mvn initialize
             -   name: Save Build Scan 2
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
                 with:
                     build-tool: "maven"
 
@@ -50,11 +50,11 @@ jobs:
             -   name: Build with Gradle 1
                 run: ./gradlew help -Dscan.tag.build
             -   name: Save Build Scan 1
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
             -   name: Build with Gradle 2
                 run: ./gradlew tasks -Dscan.tag.build
             -   name: Save Build Scan 2
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
 
     test-matrix:
         name: test-matrix
