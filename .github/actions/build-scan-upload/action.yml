@@ -113,6 +113,7 @@ runs:
             shell: bash
         -   name: Comment PR
             uses: actions/github-script@v6
+            if: always()
             env:
                 pr: ${{ steps.load-metadata.outputs.pr }}
                 scanlinks: ${{ steps.publish.outputs.scanlinks }}
