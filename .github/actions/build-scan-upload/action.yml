@@ -32,7 +32,7 @@ runs:
         -   name: Restore Build Metadata
             run: |
                 mkdir -p $BUILD_SCAN_DATA_DIR/build-scan-data
-                cp -r $BUILD_METADATA_DIR-*/* $BUILD_SCAN_DATA_DIR/build-scan-data
+                cp -r --backup=existing $BUILD_METADATA_DIR-*/* $BUILD_SCAN_DATA_DIR/build-scan-data
                 ls -ltR $BUILD_SCAN_DATA_DIR
             shell: bash
         -   name: Load Build metadata
