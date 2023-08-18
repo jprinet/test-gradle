@@ -63,8 +63,7 @@ runs:
                         per_page: 50
                       });
                       for await (const cr of checkRuns) {
-                        console.log('checking ' + cr.name)
-                        if(cr.name == 'Gradle Enterprise - Terms of Service approval verification' && cr.conclusion == 'success') {
+                        if(cr.name == 'GE-TOS' && cr.conclusion == 'success') {
                           console.log('Successful execution found completed at ' + cr.completed_at);
                           tosAgreed = "true";
                           break;
