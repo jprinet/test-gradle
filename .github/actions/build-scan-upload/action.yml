@@ -24,6 +24,7 @@ runs:
                     echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/" >> $GITHUB_ENV
                 fi
                 echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
+            shell: bash
         -   name: Download Build Metadata
             uses: dawidd6/action-download-artifact@v2
             with:
@@ -33,12 +34,14 @@ runs:
                 mkdir -p $BUILD_SCAN_DATA_DIR/build-scan-data
                 cp -r $BUILD_METADATA_DIR-*/* $BUILD_SCAN_DATA_DIR/build-scan-data
                 ls -ltR $BUILD_SCAN_DATA_DIR
+            shell: bash
         -   name: Load Build metadata
             id: load-metadata
             run: |
                 source $BUILD_METADATA_DIR-*/build.properties
                 echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
                 echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
+            shell: bash
         -   name: Wait for approval of Gradle Enterprise TOS
             uses: actions/github-script@v6
             id: check-tos
@@ -71,6 +74,7 @@ runs:
                     return tosAgreed;
         -   name: Fail job if Terms Of Service are not agreed
             run: exit 1
+            shell: bash
             if: ${{ steps.check-tos.outputs.result == 'false' }}
         -   name: Checkout
             uses: actions/checkout@v3
@@ -106,6 +110,7 @@ runs:
                 echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
             env:
                 GRADLE_ENTERPRISE_ACCESS_KEY: ${{ inputs.ge-access-key }}
+            shell: bash
         -   name: Comment PR
             uses: actions/github-script@v6
             env:

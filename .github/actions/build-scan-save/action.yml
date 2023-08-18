@@ -21,12 +21,14 @@ runs:
                 echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                 echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
                 echo "UUID=$(cat /proc/sys/kernel/random/uuid)" >>  $GITHUB_ENV
+            shell: bash
         -   name: Save Build Information
             run: |
                 mkdir -p $BUILD_METADATA_DIR
                 echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_METADATA_DIR/$BUILD_PROPERTIES
                 echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_METADATA_DIR/$BUILD_PROPERTIES
                 cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+            shell: bash
         -   name: Upload Build Scan
             uses: actions/upload-artifact@v3
             with:
