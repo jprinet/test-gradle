@@ -1,0 +1,18 @@
+name: 'Gradle Enterprise - Terms of Service approval verification'
+description: 'Approve Gradle Enterprise Terms of Service'
+
+runs:
+    using: "composite"
+    steps:
+        -   name: "Gradle Enterprise - Terms of Service approval verification"
+            if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms') || github.event_name == 'pull_request_target'
+            uses: contributor-assistant/github-action@v2.3.0
+            env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            with:
+                path-to-signatures: 'signatures/version1/gradle-enterprise.json'
+                path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
+                branch: main
+                custom-pr-sign-comment: 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms'
+                custom-notsigned-prcomment: 'Please accept [Gradle Enterprise Terms Of Service](https://gradle.com/legal/gradle-enterprise-software-agreement/) to get your PR build scan published by commenting this PR with the following message:'
+                custom-allsigned-prcomment: 'All Contributors have accepted Gradle Enterprise Terms Of Service.'

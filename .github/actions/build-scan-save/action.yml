@@ -1,0 +1,35 @@
+name: "Gradle Enterprise - Save Build Scan"
+description: 'Save Gradle Enterprise build scan'
+
+inputs:
+    build-tool:
+        description: 'Build tool [gradle|maven]'
+        default: 'gradle'
+
+runs:
+    using: "composite"
+    steps:
+        -   name: Set environmental variables
+            # Required as $HOME is not expanded in a classical env section
+            run: |
+                if [[ "${{ inputs.build-tool }}" == "gradle" ]]
+                then
+                    echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
+                else
+                    echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
+                fi
+                echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
+                echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
+                echo "UUID=$(cat /proc/sys/kernel/random/uuid)" >>  $GITHUB_ENV
+        -   name: Save Build Information
+            run: |
+                mkdir -p $BUILD_METADATA_DIR
+                echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_METADATA_DIR/$BUILD_PROPERTIES
+                echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_METADATA_DIR/$BUILD_PROPERTIES
+                cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+        -   name: Upload Build Scan
+            uses: actions/upload-artifact@v3
+            with:
+                name: build-metadata-$UUID
+                path: |
+                    ~/build-metadata
