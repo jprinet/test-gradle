@@ -101,9 +101,9 @@ runs:
                   echo "BUILD SCAN PUBLICATION $i/$nbScans"
                   if [[ "${{ inputs.build-tool }}" == "gradle" ]]
                   then
-                      ./gradlew buildScanPublishPrevious | tee build.out || true
+                      ./gradlew buildScanPublishPrevious || true | tee build.out
                   else
-                      mvn gradle-enterprise:build-scan-publish-previous | tee build.out || true
+                      mvn gradle-enterprise:build-scan-publish-previous || true | tee build.out
                   fi
                   scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //'))"
                 done
