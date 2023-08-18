@@ -17,7 +17,7 @@ runs:
                 then
                     echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
                 else
-                    echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/" >> $GITHUB_ENV
+                    echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/*" >> $GITHUB_ENV
                 fi
                 echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                 echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
