@@ -21,13 +21,13 @@ jobs:
             #      - name: Build with Maven 1
             #        run: mvn clean
             -   name: Save Build Scan 1
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
             -   name: Build with Gradle 2
                 run: ./gradlew tasks -Dscan.tag.init
             #      - name: Build with Maven 2
             #        run: mvn initialize
             -   name: Save Build Scan 2
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
 
     build:
         name: Build
@@ -46,11 +46,11 @@ jobs:
             -   name: Build with Gradle 1
                 run: ./gradlew help -Dscan.tag.build
             -   name: Save Build Scan 1
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
             -   name: Build with Gradle 2
                 run: ./gradlew tasks -Dscan.tag.build
             -   name: Save Build Scan 2
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
 
     test-matrix:
         name: test-matrix
@@ -72,8 +72,8 @@ jobs:
             -   name: Build with Gradle 1
                 run: ./gradlew help -Dscan.tag.test -Dscan.value.version=${{ matrix.version }}
             -   name: Save Build Scan 1
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
             -   name: Build with Gradle 2
                 run: ./gradlew tasks -Dscan.tag.test -Dscan.tag.version=${{ matrix.version }}
             -   name: Save Build Scan 2
-                uses: actions/build-scan-save@v1
+                uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
