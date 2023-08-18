@@ -102,9 +102,9 @@ runs:
                   # FIXME ignore publication failures
                   if [[ "${{ inputs.build-tool }}" == "gradle" ]]
                   then
-                      ./gradlew buildScanPublishPrevious | tee build.out
+                      (./gradlew buildScanPublishPrevious || true) | tee build.out
                   else
-                      mvn gradle-enterprise:build-scan-publish-previous | tee build.out
+                      (mvn gradle-enterprise:build-scan-publish-previous || true) | tee build.out
                   fi
                   scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //'))"
                 done
