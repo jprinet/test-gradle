@@ -10,6 +10,7 @@ runs:
     using: "composite"
     steps:
         -   name: Set environmental variables
+            id: set-env
             # Required as $HOME is not expanded in a classical env section
             run: |
                 if [[ "${{ inputs.build-tool }}" == "gradle" ]]
@@ -20,7 +21,7 @@ runs:
                 fi
                 echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                 echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
-                echo "UUID=$(cat /proc/sys/kernel/random/uuid)" >>  $GITHUB_ENV
+                echo "uuid=$(cat /proc/sys/kernel/random/uuid)" >> "$GITHUB_OUTPUT"
             shell: bash
         -   name: Save Build Information
             run: |
@@ -32,6 +33,6 @@ runs:
         -   name: Upload Build Scan
             uses: actions/upload-artifact@v3
             with:
-                name: build-metadata-$UUID
+                name: build-metadata-${{ steps.set-env.outputs.uuid }}
                 path: |
                     ~/build-metadata
