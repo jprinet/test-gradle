@@ -99,12 +99,11 @@ runs:
                 for ((i=1; i <= $nbScans; i++ ))
                 do
                   echo "BUILD SCAN PUBLICATION $i/$nbScans"
-                  # FIXME ignore publication failures
                   if [[ "${{ inputs.build-tool }}" == "gradle" ]]
                   then
-                      (./gradlew buildScanPublishPrevious || true) | tee build.out
+                      (./gradlew buildScanPublishPrevious || true) 1> build.out
                   else
-                      (mvn gradle-enterprise:build-scan-publish-previous || true) | tee build.out
+                      (mvn gradle-enterprise:build-scan-publish-previous || true) 1> build.out
                   fi
                   scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //'))"
                 done
@@ -114,7 +113,6 @@ runs:
             shell: bash
         -   name: Comment PR
             uses: actions/github-script@v6
-            if: always()
             env:
                 pr: ${{ steps.load-metadata.outputs.pr }}
                 scanlinks: ${{ steps.publish.outputs.scanlinks }}
