@@ -101,14 +101,17 @@ runs:
                   echo "BUILD SCAN PUBLICATION $i/$nbScans"
                   if [[ "${{ inputs.build-tool }}" == "gradle" ]]
                   then
-                      (./gradlew buildScanPublishPrevious || true) 1> build.out
+                      #FIXME error fails the step
+                      (./gradlew buildScanPublishPrevious || true) | tee build.out
                   else
-                      (mvn gradle-enterprise:build-scan-publish-previous || true) 1> build.out
+                      #FIXME error fails the step
+                      (mvn gradle-enterprise:build-scan-publish-previous || true) | tee build.out
                   fi
+
                   scanLink=$(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //')
-                  echo "Found scan link $scanLink"
                   if [[ ! -z "$scanLink" ]]
                   then
+                    echo "Found scan link $scanLink"
                     scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($scanLink)"
                   fi
                 done
