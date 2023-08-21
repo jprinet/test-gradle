@@ -96,6 +96,7 @@ runs:
         -   name: Publish build scan
             id: publish
             run: |
+                set +e
                 scanlinks=""
                 nbScans=$(find $BUILD_SCAN_DATA_DIR/*/previous/* -type d | wc -l)
 
@@ -105,10 +106,10 @@ runs:
                   if [[ "${{ inputs.build-tool }}" == "gradle" ]]
                   then
                       #FIXME error fails the step
-                      (./gradlew buildScanPublishPrevious || true) | tee build.out
+                      ./gradlew buildScanPublishPrevious | tee build.out
                   else
                       #FIXME error fails the step
-                      (mvn gradle-enterprise:build-scan-publish-previous || true) | tee build.out
+                      mvn gradle-enterprise:build-scan-publish-previous | tee build.out
                   fi
 
                   scanLink=$(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //')
