@@ -39,5 +39,4 @@ runs:
             with:
                 name: build-metadata-${{ inputs.build-tool }}-${{ steps.set-env.outputs.uuid }}
                 path: |
-                    $BUILD_METADATA_DIR
-# ~/build-metadata/${{ inputs.build-tool }}
+                    ~/build-metadata/${{ inputs.build-tool }}
