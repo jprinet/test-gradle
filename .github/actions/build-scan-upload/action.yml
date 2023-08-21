@@ -47,7 +47,7 @@ runs:
             shell: bash
         -   name: Restore Build Metadata
             run: |
-                # --backup=numbered allows to avoid error with duplicates "cp: will not overwrite just-created <filename> with <sameFilename>"
+                # cp --backup=numbered allows to avoid error with duplicates "cp: will not overwrite just-created <filename> with <sameFilename>"
                 cp -r --backup=numbered $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
             shell: bash
         -   name: Wait for approval of Gradle Enterprise TOS
@@ -62,21 +62,21 @@ runs:
                 script: |
                     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-                    // Iterating until finding a successful check
+                    // Run several checks to allow delayed approval
                     for(let i = 1; i < 5; i++, await delay(15000)) {
                       console.log('Attempt ' + i);
+                      // returns most recent check runs first by default
                       const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
                         ref: process.env.sha,
                         per_page: 50
                       });
                       for await (const cr of checkRuns) {
-                        // check only last execution
+                        // check only last execution of the TOS workflow
                         if(cr.name == '${{ inputs.tos-workflow-name }}') {
+                          console.log('Found execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
                           if(cr.conclusion == 'success') {
-                            console.log('Found successful execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
                             return;
                           } else {
-                            console.log('Found failed execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
                             throw new Error('Found failed execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
                           }
                         }
@@ -99,7 +99,7 @@ runs:
                 scanlinks=""
                 nbScans=$(find $BUILD_SCAN_DATA_DIR/*/previous/* -type d | wc -l)
 
-                for ((i=1; i <= $nbScans; i++ ))
+                for (i=1; i <= $nbScans; i++)
                 do
                   echo "BUILD SCAN PUBLICATION $i/$nbScans"
                   if [[ "${{ inputs.build-tool }}" == "gradle" ]]
