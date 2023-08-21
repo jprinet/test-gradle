@@ -9,7 +9,7 @@ inputs:
 runs:
     using: "composite"
     steps:
-        -   name: Set environmental variables
+        -   name: Init environment
             # Required as $HOME is not expanded in a classical env section
             id: set-env
             run: |
@@ -36,6 +36,6 @@ runs:
         -   name: Upload Build Scan
             uses: actions/upload-artifact@v3
             with:
-                name: build-metadata-${{ steps.set-env.outputs.uuid }}
+                name: build-metadata-${{ inputs.build-tool }}-${{ steps.set-env.outputs.uuid }}
                 path: |
                     ~/build-metadata/${{ inputs.build-tool }}

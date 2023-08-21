@@ -15,7 +15,7 @@ inputs:
 runs:
     using: "composite"
     steps:
-        -   name: Set environmental variables
+        -   name: Init environment
             # Required as $HOME is not expanded in a classical env section
             run: |
                 if [[ "${{ inputs.build-tool }}" == "gradle" ]]
@@ -24,9 +24,13 @@ runs:
                 else
                     BUILD_TOOL_HOME=".m2/.gradle-enterprise"
                 fi
+                BUILD_SCAN_DATA_DIR="$HOME/$BUILD_TOOL_HOME/build-scan-data"
 
-                echo "BUILD_SCAN_DATA_DIR=$HOME/$BUILD_TOOL_HOME/build-scan-data" >> $GITHUB_ENV
-                echo "BUILD_METADATA_DIR=build-metadata-*" >> $GITHUB_ENV
+                source $BUILD_METADATA_DIR/build.properties
+                echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
+                echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
+                echo "BUILD_SCAN_DATA_DIR=$BUILD_SCAN_DATA_DIR" >> $GITHUB_ENV
+                echo "BUILD_METADATA_DIR=build-metadata-${{ inputs.build-tool }}-*" >> $GITHUB_ENV
             shell: bash
         -   name: Download Build Metadata
             uses: dawidd6/action-download-artifact@v2
@@ -38,13 +42,6 @@ runs:
                 # --backup=numbered allows to avoid error with duplicates "cp: will not overwrite just-created <filename> with <sameFilename>"
                 cp -r --backup=numbered $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
                 ls -ltR $BUILD_SCAN_DATA_DIR
-            shell: bash
-        -   name: Load Build metadata
-            id: load-metadata
-            run: |
-                source $BUILD_METADATA_DIR/build.properties
-                echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
-                echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
             shell: bash
         -   name: Wait for approval of Gradle Enterprise TOS
             uses: actions/github-script@v6
