@@ -16,14 +16,17 @@ runs:
     using: "composite"
     steps:
         -   name: Set environmental variables
+            # Required as $HOME is not expanded in a classical env section
             run: |
                 if [[ "${{ inputs.build-tool }}" == "gradle" ]]
                 then
-                    echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
+                    BUILD_TOOL_HOME=".gradle"
                 else
-                    echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/" >> $GITHUB_ENV
+                    BUILD_TOOL_HOME=".m2/.gradle-enterprise"
                 fi
-                echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
+
+                echo "BUILD_SCAN_DATA_DIR=$HOME/$BUILD_TOOL_HOME/build-scan-data" >> $GITHUB_ENV
+                echo "BUILD_METADATA_DIR=build-metadata-*" >> $GITHUB_ENV
             shell: bash
         -   name: Download Build Metadata
             uses: dawidd6/action-download-artifact@v2
@@ -31,15 +34,15 @@ runs:
                 run_id: ${{ github.event.workflow_run.id }}
         -   name: Restore Build Metadata
             run: |
-                mkdir -p $BUILD_SCAN_DATA_DIR/build-scan-data
+                mkdir -p $BUILD_SCAN_DATA_DIR
                 # --backup=numbered allows to avoid error with duplicates "cp: will not overwrite just-created <filename> with <sameFilename>"
-                cp -r --backup=numbered $BUILD_METADATA_DIR-*/* $BUILD_SCAN_DATA_DIR/build-scan-data
+                cp -r --backup=numbered $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
                 ls -ltR $BUILD_SCAN_DATA_DIR
             shell: bash
         -   name: Load Build metadata
             id: load-metadata
             run: |
-                source $BUILD_METADATA_DIR-*/build.properties
+                source $BUILD_METADATA_DIR/build.properties
                 echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
                 echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
             shell: bash
@@ -88,14 +91,9 @@ runs:
         -   name: Publish build scan
             id: publish
             run: |
-                if [[ "${{ inputs.build-tool }}" == "gradle" ]]
-                then
-                    nbScans=$(find ~/.gradle/build-scan-data/*/previous/* -type d | wc -l)
-                else
-                    nbScans=$(find ~/.m2/.gradle-enterprise/build-scan-data/*/previous/* -type d | wc -l)
-                fi
-
                 scanlinks=""
+                nbScans=$(find $BUILD_SCAN_DATA_DIR/*/previous/* -type d | wc -l)
+
                 for ((i=1; i <= $nbScans; i++ ))
                 do
                   echo "BUILD SCAN PUBLICATION $i/$nbScans"
