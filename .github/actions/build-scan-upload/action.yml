@@ -85,7 +85,7 @@ runs:
                 distribution: 'temurin'
         -   name: Set up Gradle
             uses: gradle/gradle-build-action@v2
-            if: ${{ inputs.build-tool == "gradle" }}
+            if: inputs.build-tool == 'gradle'
         -   name: Publish build scan
             id: publish
             run: |
