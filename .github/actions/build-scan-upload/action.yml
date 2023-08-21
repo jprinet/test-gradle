@@ -15,6 +15,10 @@ inputs:
 runs:
     using: "composite"
     steps:
+        -   name: Download Build Metadata
+            uses: dawidd6/action-download-artifact@v2
+            with:
+                run_id: ${{ github.event.workflow_run.id }}
         -   name: Init environment
             # Required as $HOME is not expanded in a classical env section
             run: |
@@ -32,10 +36,6 @@ runs:
                 echo "BUILD_SCAN_DATA_DIR=$HOME/$BUILD_TOOL_HOME/build-scan-data" >> $GITHUB_ENV
                 echo "BUILD_METADATA_DIR=$BUILD_METADATA_DIR" >> $GITHUB_ENV
             shell: bash
-        -   name: Download Build Metadata
-            uses: dawidd6/action-download-artifact@v2
-            with:
-                run_id: ${{ github.event.workflow_run.id }}
         -   name: Restore Build Metadata
             run: |
                 mkdir -p $BUILD_SCAN_DATA_DIR
@@ -85,6 +85,7 @@ runs:
                 distribution: 'temurin'
         -   name: Set up Gradle
             uses: gradle/gradle-build-action@v2
+            if: ${{ inputs.build-tool == "gradle" }}
         -   name: Publish build scan
             id: publish
             run: |
