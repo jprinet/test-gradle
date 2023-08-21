@@ -75,7 +75,7 @@ runs:
                           if(cr.conclusion == 'success') {
                             console.log('Found successful execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
                             return;
-                          else {
+                          } else {
                             throw new Error('Found failed execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
                           }
                         }
