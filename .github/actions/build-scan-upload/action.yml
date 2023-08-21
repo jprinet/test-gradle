@@ -99,7 +99,7 @@ runs:
                 scanlinks=""
                 nbScans=$(find $BUILD_SCAN_DATA_DIR/*/previous/* -type d | wc -l)
 
-                for (i=1; i <= $nbScans; i++)
+                for ((i=1; i <= $nbScans; i++))
                 do
                   echo "BUILD SCAN PUBLICATION $i/$nbScans"
                   if [[ "${{ inputs.build-tool }}" == "gradle" ]]
