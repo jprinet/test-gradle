@@ -15,7 +15,7 @@ jobs:
         permissions:
             pull-requests: write
         steps:
-            -   name: "Gradle Enterprise Build Scan upload for Maven"
+            -   name: "Gradle Enterprise Build Scan upload"
                 uses: jprinet/test-gradle/.github/actions/build-scan-upload@v1
                 with:
                     token: ${{ secrets.GITHUB_TOKEN }}
