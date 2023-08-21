@@ -9,30 +9,34 @@ inputs:
 runs:
     using: "composite"
     steps:
-        -   name: Set environmental variables
-            id: set-env
+        -   name: Init environment
             # Required as $HOME is not expanded in a classical env section
+            id: set-env
             run: |
                 if [[ "${{ inputs.build-tool }}" == "gradle" ]]
                 then
-                    echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/build-scan-data/*" >> $GITHUB_ENV
+                    BUILD_TOOL_HOME=".gradle"
                 else
-                    echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/build-scan-data/*" >> $GITHUB_ENV
+                    BUILD_TOOL_HOME=".m2/.gradle-enterprise"
                 fi
-                echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
-                echo "BUILD_METADATA_DIR=$HOME/build-metadata" >> $GITHUB_ENV
+                echo "BUILD_SCAN_DATA_DIR=$HOME/$BUILD_TOOL_HOME/build-scan-data/*" >> $GITHUB_ENV
+                echo "BUILD_METADATA_DIR=$HOME/build-metadata/${{ inputs.build-tool }}" >> $GITHUB_ENV
+
+                # create unique name for upload artifact
                 echo "uuid=$(cat /proc/sys/kernel/random/uuid)" >> "$GITHUB_OUTPUT"
             shell: bash
         -   name: Save Build Information
             run: |
                 mkdir -p $BUILD_METADATA_DIR
-                echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_METADATA_DIR/$BUILD_PROPERTIES
-                echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_METADATA_DIR/$BUILD_PROPERTIES
+                cat <<EOT >> $BUILD_METADATA_DIR/build.properties
+                BUILD_SHA=${{ github.event.pull_request.head.sha }}
+                BUILD_PR=${{ github.event.number }}
+                EOT
                 cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
             shell: bash
         -   name: Upload Build Scan
             uses: actions/upload-artifact@v3
             with:
-                name: build-metadata-${{ steps.set-env.outputs.uuid }}
+                name: build-metadata-${{ inputs.build-tool }}-${{ steps.set-env.outputs.uuid }}
                 path: |
-                    ~/build-metadata
+                    ~/build-metadata/${{ inputs.build-tool }}

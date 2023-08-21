@@ -11,71 +11,78 @@ inputs:
     ge-access-key:
         description: "GE access key"
         required: false
+    tos-workflow-name:
+        description: "Name of the Github Workflow checking TOS Approval"
+        required: false
+        default: "GE-TOS"
 
 runs:
     using: "composite"
     steps:
-        -   name: Set environmental variables
-            run: |
-                if [[ "${{ inputs.build-tool }}" == "gradle" ]]
-                then
-                    echo "BUILD_SCAN_DATA_DIR=$HOME/.gradle/" >> $GITHUB_ENV
-                else
-                    echo "BUILD_SCAN_DATA_DIR=$HOME/.m2/.gradle-enterprise/" >> $GITHUB_ENV
-                fi
-                echo "BUILD_METADATA_DIR=build-metadata" >> $GITHUB_ENV
-            shell: bash
         -   name: Download Build Metadata
             uses: dawidd6/action-download-artifact@v2
             with:
                 run_id: ${{ github.event.workflow_run.id }}
-        -   name: Restore Build Metadata
+        -   name: Init environment
+            # Required as $HOME is not expanded in a classical env section
+            id: init-env
             run: |
-                mkdir -p $BUILD_SCAN_DATA_DIR/build-scan-data
-                # --backup=numbered allows to avoid error with duplicates "cp: will not overwrite just-created <filename> with <sameFilename>"
-                cp -r --backup=numbered $BUILD_METADATA_DIR-*/* $BUILD_SCAN_DATA_DIR/build-scan-data
-                ls -ltR $BUILD_SCAN_DATA_DIR
-            shell: bash
-        -   name: Load Build metadata
-            id: load-metadata
-            run: |
-                source $BUILD_METADATA_DIR-*/build.properties
+                if [[ "${{ inputs.build-tool }}" == "gradle" ]]
+                then
+                    BUILD_TOOL_HOME=".gradle"
+                else
+                    BUILD_TOOL_HOME=".m2/.gradle-enterprise"
+                fi
+                BUILD_METADATA_DIR="build-metadata-${{ inputs.build-tool }}-*"
+                BUILD_SCAN_DATA_DIR="$HOME/$BUILD_TOOL_HOME/build-scan-data"
+
+                source $BUILD_METADATA_DIR/build.properties
                 echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
                 echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
+
+                echo "BUILD_SCAN_DATA_DIR=$BUILD_SCAN_DATA_DIR" >> $GITHUB_ENV
+                echo "BUILD_METADATA_DIR=$BUILD_METADATA_DIR" >> $GITHUB_ENV
+
+                mkdir -p $BUILD_SCAN_DATA_DIR
+            shell: bash
+        -   name: Restore Build Metadata
+            run: |
+                # cp --backup=numbered allows to avoid error with duplicates "cp: will not overwrite just-created <filename> with <sameFilename>"
+                cp -r --backup=numbered $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
             shell: bash
         -   name: Wait for approval of Gradle Enterprise TOS
             uses: actions/github-script@v6
             id: check-tos
             env:
-                sha: ${{ steps.load-metadata.outputs.sha }}
-                pr: ${{ steps.load-metadata.outputs.pr }}
+                sha: ${{ steps.init-env.outputs.sha }}
+                pr: ${{ steps.init-env.outputs.pr }}
             with:
                 github-token: ${{inputs.token}}
                 result-encoding: string
                 script: |
                     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-                    let tosAgreed = "false";
 
-                    // Iterating until finding a successful check
-                    for(let i = 1; i < 5 && tosAgreed == "false"; i++, await delay(15000)) {
+                    // Run several checks to allow delayed approval
+                    for(let i = 1; i < 5; i++, await delay(15000)) {
                       console.log('Attempt ' + i);
+                      // returns most recent check runs first by default
                       const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
                         ref: process.env.sha,
                         per_page: 50
                       });
                       for await (const cr of checkRuns) {
-                        if(cr.name == 'GE-TOS' && cr.conclusion == 'success') {
-                          console.log('Successful execution found completed at ' + cr.completed_at);
-                          tosAgreed = "true";
-                          break;
+                        // check only last execution of the TOS workflow
+                        if(cr.name == '${{ inputs.tos-workflow-name }}') {
+                          console.log('Found execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
+                          if(cr.conclusion == 'success') {
+                            return;
+                          } else {
+                            throw new Error('Found failed execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
+                          }
                         }
                       }
                     }
-                    return tosAgreed;
-        -   name: Fail job if Terms Of Service are not agreed
-            run: exit 1
-            shell: bash
-            if: ${{ steps.check-tos.outputs.result == 'false' }}
+                    throw new Error('No execution found for ${{ inputs.tos-workflow-name }}');
         -   name: Checkout
             uses: actions/checkout@v3
         -   name: Set up JDK 8
@@ -85,27 +92,31 @@ runs:
                 distribution: 'temurin'
         -   name: Set up Gradle
             uses: gradle/gradle-build-action@v2
+            if: inputs.build-tool == 'gradle'
         -   name: Publish build scan
             id: publish
             run: |
-                if [[ "${{ inputs.build-tool }}" == "gradle" ]]
-                then
-                    nbScans=$(find ~/.gradle/build-scan-data/*/previous/* -type d | wc -l)
-                else
-                    nbScans=$(find ~/.m2/.gradle-enterprise/build-scan-data/*/previous/* -type d | wc -l)
-                fi
-
                 scanlinks=""
-                for ((i=1; i <= $nbScans; i++ ))
+                nbScans=$(find $BUILD_SCAN_DATA_DIR/*/previous/* -type d | wc -l)
+
+                for ((i=1; i <= $nbScans; i++))
                 do
                   echo "BUILD SCAN PUBLICATION $i/$nbScans"
                   if [[ "${{ inputs.build-tool }}" == "gradle" ]]
                   then
-                      ./gradlew buildScanPublishPrevious | tee build.out
+                      #FIXME error fails the step
+                      (./gradlew buildScanPublishPrevious || true) | tee build.out
                   else
-                      mvn gradle-enterprise:build-scan-publish-previous | tee build.out
+                      #FIXME error fails the step
+                      (mvn gradle-enterprise:build-scan-publish-previous || true) | tee build.out
                   fi
-                  scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //'))"
+
+                  scanLink=$(grep -A1 "Publishing build scan..." build.out  | tail -n 1  | sed 's/\[INFO\] //')
+                  if [[ ! -z "$scanLink" ]]
+                  then
+                    echo "Found scan link $scanLink"
+                    scanlinks="${scanlinks}<br>[Gradle Enterprise Build Scan® $i]($scanLink)"
+                  fi
                 done
                 echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
             env:
@@ -115,7 +126,7 @@ runs:
             uses: actions/github-script@v6
             if: always()
             env:
-                pr: ${{ steps.load-metadata.outputs.pr }}
+                pr: ${{ steps.init-env.outputs.pr }}
                 scanlinks: ${{ steps.publish.outputs.scanlinks }}
             with:
                 script: |
