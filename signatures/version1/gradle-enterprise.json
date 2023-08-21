@@ -1,14 +1,6 @@
 {
   "signedContributors": [
     {
-      "name": "jprinet",
-      "id": 10243934,
-      "comment_id": 1684037340,
-      "created_at": "2023-08-18T14:52:39Z",
-      "repoId": 674311950,
-      "pullRequestNo": 111
-    },
-    {
       "name": "jprinet-jfrog",
       "id": 76202438,
       "comment_id": 1684037824,
