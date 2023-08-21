@@ -119,7 +119,7 @@ runs:
         -   name: Comment PR
             uses: actions/github-script@v6
             env:
-                pr: ${{ steps.load-metadata.outputs.pr }}
+                pr: ${{ steps.init-env.outputs.pr }}
                 scanlinks: ${{ steps.publish.outputs.scanlinks }}
             with:
                 script: |
