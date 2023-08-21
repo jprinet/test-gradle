@@ -11,6 +11,10 @@ inputs:
     ge-access-key:
         description: "GE access key"
         required: false
+    tos-workflow-name:
+        description: "Name of the Github Workflow checking TOS Approval"
+        required: false
+        default: "GE-TOS"
 
 runs:
     using: "composite"
@@ -30,19 +34,21 @@ runs:
                     BUILD_TOOL_HOME=".m2/.gradle-enterprise"
                 fi
                 BUILD_METADATA_DIR="build-metadata-${{ inputs.build-tool }}-*"
-                source $BUILD_METADATA_DIR/build.properties
+                BUILD_SCAN_DATA_DIR="$HOME/$BUILD_TOOL_HOME/build-scan-data"
 
+                source $BUILD_METADATA_DIR/build.properties
                 echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
                 echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
-                echo "BUILD_SCAN_DATA_DIR=$HOME/$BUILD_TOOL_HOME/build-scan-data" >> $GITHUB_ENV
+
+                echo "BUILD_SCAN_DATA_DIR=$BUILD_SCAN_DATA_DIR" >> $GITHUB_ENV
                 echo "BUILD_METADATA_DIR=$BUILD_METADATA_DIR" >> $GITHUB_ENV
+
+                mkdir -p $BUILD_SCAN_DATA_DIR
             shell: bash
         -   name: Restore Build Metadata
             run: |
-                mkdir -p $BUILD_SCAN_DATA_DIR
                 # --backup=numbered allows to avoid error with duplicates "cp: will not overwrite just-created <filename> with <sameFilename>"
                 cp -r --backup=numbered $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
-                ls -ltR $BUILD_SCAN_DATA_DIR
             shell: bash
         -   name: Wait for approval of Gradle Enterprise TOS
             uses: actions/github-script@v6
@@ -55,7 +61,7 @@ runs:
                 result-encoding: string
                 script: |
                     const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-                    let tosAgreed = "false";
+                    //let tosAgreed = "false";
 
                     // Iterating until finding a successful check
                     for(let i = 1; i < 5 && tosAgreed == "false"; i++, await delay(15000)) {
@@ -65,18 +71,16 @@ runs:
                         per_page: 50
                       });
                       for await (const cr of checkRuns) {
-                        if(cr.name == 'GE-TOS' && cr.conclusion == 'success') {
-                          console.log('Successful execution found completed at ' + cr.completed_at);
-                          tosAgreed = "true";
-                          break;
+                        if(cr.name == '${{ inputs.tos-workflow-name }}' && cr.conclusion == 'success') {
+                          console.log('Found successful execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
+                          //tosAgreed = "true";
+                          //break;
+                          return;
                         }
                       }
                     }
-                    return tosAgreed;
-        -   name: Fail job if Terms Of Service are not agreed
-            run: exit 1
-            shell: bash
-            if: ${{ steps.check-tos.outputs.result == 'false' }}
+                    //return tosAgreed;
+                    throw new Error('No successful execution found for ${{ inputs.tos-workflow-name }}');
         -   name: Checkout
             uses: actions/checkout@v3
         -   name: Set up JDK 8

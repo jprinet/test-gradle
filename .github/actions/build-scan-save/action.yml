@@ -20,7 +20,6 @@ runs:
                     BUILD_TOOL_HOME=".m2/.gradle-enterprise"
                 fi
                 echo "BUILD_SCAN_DATA_DIR=$HOME/$BUILD_TOOL_HOME/build-scan-data/*" >> $GITHUB_ENV
-                echo "BUILD_PROPERTIES=build.properties" >> $GITHUB_ENV
                 echo "BUILD_METADATA_DIR=$HOME/build-metadata/${{ inputs.build-tool }}" >> $GITHUB_ENV
 
                 # create unique name for upload artifact
@@ -29,8 +28,10 @@ runs:
         -   name: Save Build Information
             run: |
                 mkdir -p $BUILD_METADATA_DIR
-                echo "BUILD_SHA=${{ github.event.pull_request.head.sha }}" > $BUILD_METADATA_DIR/$BUILD_PROPERTIES
-                echo "BUILD_PR=${{ github.event.number }}" >> $BUILD_METADATA_DIR/$BUILD_PROPERTIES
+                cat <<EOT >> $BUILD_METADATA_DIR/build.properties
+                BUILD_SHA=${{ github.event.pull_request.head.sha }}
+                BUILD_PR=${{ github.event.number }}
+                EOT
                 cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
             shell: bash
         -   name: Upload Build Scan
@@ -38,4 +39,5 @@ runs:
             with:
                 name: build-metadata-${{ inputs.build-tool }}-${{ steps.set-env.outputs.uuid }}
                 path: |
-                    ~/build-metadata/${{ inputs.build-tool }}
+                    $BUILD_METADATA_DIR
+# ~/build-metadata/${{ inputs.build-tool }}
