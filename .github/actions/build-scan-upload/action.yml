@@ -21,6 +21,7 @@ runs:
                 run_id: ${{ github.event.workflow_run.id }}
         -   name: Init environment
             # Required as $HOME is not expanded in a classical env section
+            id: init-env
             run: |
                 if [[ "${{ inputs.build-tool }}" == "gradle" ]]
                 then
@@ -47,8 +48,8 @@ runs:
             uses: actions/github-script@v6
             id: check-tos
             env:
-                sha: ${{ steps.load-metadata.outputs.sha }}
-                pr: ${{ steps.load-metadata.outputs.pr }}
+                sha: ${{ steps.init-env.outputs.sha }}
+                pr: ${{ steps.init-env.outputs.pr }}
             with:
                 github-token: ${{inputs.token}}
                 result-encoding: string
