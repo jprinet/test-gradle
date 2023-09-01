@@ -23,14 +23,41 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           echo "$GITHUB_CONTEXT"
+#      - name: Collect workflow inputs
+#        env:
+#          eventName: ${{ github.event_name }}
+#          runId: ${{ github.event.workflow_run.id }}
+#          sha: ${{ github.sha }}
+#          pr: ${{ github.event.issue.number }}
+#        uses: actions/github-script@v3
+#        with:
+#          script: |
+#            let pr = ''
+#            if(eventName == 'issue_comment') {
+#              pr = process.env.pr
+#            } else if(eventName == 'workflow_run') {
+#
+#            }
+#
+#            await github.issues.createComment({
+#              issue_number: process.env.issue_id,
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              body: 'Something went wrong setting up the job.\n\n'
+#              + 'Refer to the logs at ' + process.env.run_url,
+#            })
+#
       - name: Collect workflow inputs
         id: collect-github-inputs
         run: |
-          echo ${{ github.event_name }}
           EVENT_NAME=${{ github.event_name }}
           RUN_ID=${{ github.event.workflow_run.id }}
           SHA=${{ github.sha }}
           PR=${{ github.event.issue.number }}
+
+          if
+
+
           echo "EVENT_NAME=$EVENT_NAME" >> "$GITHUB_OUTPUT"
           echo "RUN_ID=$RUN_ID" >> "$GITHUB_OUTPUT"
           echo "SHA=$SHA" >> "$GITHUB_OUTPUT"
@@ -40,16 +67,12 @@ jobs:
           echo $SHA >> workflow.properties
           echo $PR >> workflow.properties
           cat workflow.properties
-      - name: Save workflow inputs
-        uses: actions/upload-artifact@v3
-        with:
-          name: workflow-inputs-${{ inputs.build-tool }}-${{ steps.set-env.outputs.uuid }}
-          path: |
-            ~/build-metadata/${{ inputs.build-tool }}
-
-#          echo "github-sha=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_OUTPUT"
-#          echo "github-pr=${{ github.event.number }}" >> "$GITHUB_OUTPUT"
-#          echo "github-pr=${{ github.event.issue.number }}" >> "$GITHUB_OUTPUT"
+#      - name: Save workflow inputs
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: workflow-inputs-${{ inputs.build-tool }}-${{ steps.set-env.outputs.uuid }}
+#          path: |
+#            ~/build-metadata/${{ inputs.build-tool }}
 
   consume:
     runs-on: ubuntu-latest
@@ -74,11 +97,10 @@ jobs:
     with:
       path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
     secrets: inherit
-    if:
 
 #  publish-gradle-build-scans:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
 #    secrets: inherit
-#  publish-maven-build-scans:
-#    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
-#    secrets: inherit
+  publish-maven-build-scans:
+    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
+    secrets: inherit

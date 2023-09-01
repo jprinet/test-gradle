@@ -7,6 +7,11 @@ jobs:
     name: Init
     runs-on: ubuntu-latest
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
@@ -22,6 +27,7 @@ jobs:
         uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
         with:
           build-tool: "maven"
+
 #      - name: Build with Maven 2
 #        run: mvn initialize
 #      - name: Save Build Scan 2
