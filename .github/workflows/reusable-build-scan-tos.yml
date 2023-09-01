@@ -15,11 +15,11 @@ jobs:
     steps:
       - name: override context
         run: |
-          echo ${{context.issue.number}}
-          context.issue.number = 166
-          context.issue.owner = 'jprinet'
-          context.issue.repo = 'jprinet/test-gradle'
-          echo ${{context.issue.number}}
+          echo ${{github.context.issue.number}}
+          github.context.issue.number = 166
+          github.context.issue.owner = 'jprinet'
+          github.context.issue.repo = 'jprinet/test-gradle'
+          echo ${{github.context.issue.number}}
       - name: "Gradle Enterprise - Terms of Service approval verification"
         uses: contributor-assistant/github-action@v2.3.0
         env:
