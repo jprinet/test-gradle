@@ -28,12 +28,12 @@ jobs:
         with:
           pr: ${{ github.event.issue.number }}
           workflow_conclusion: success
-          workflow: build_verification.yml
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: build-verification.yml
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
 #          commit: ${{ github.sha }}
 #          name: build-metadata-${{ github.event.issue.number }}-${{ github.sha }}
 #          search_artifacts: true
-          check_artifacts: true
+#          check_artifacts: true
       - name: Download Build Metadata
         if: github.event_name == 'workflow_run'
         uses: dawidd6/action-download-artifact@v2
