@@ -13,10 +13,10 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      github-event-name: ${{ steps.collect-github-inputs.github-event-name }}
-      github-workflow-run-id: ${{ steps.collect-github-inputs.github-workflow-run-id }}
-      github-sha: ${{ steps.collect-github-inputs.github-sha }}
-      github-pr: ${{ steps.collect-github-inputs.github-pr }}
+      github-event-name: ${{ steps.collect-github-inputs.outputs.github-event-name }}
+      github-workflow-run-id: ${{ steps.collect-github-inputs.outputs.github-workflow-run-id }}
+      github-sha: ${{ steps.collect-github-inputs.outputs.github-sha }}
+      github-pr: ${{ steps.collect-github-inputs.outputs.github-pr }}
     steps:
       - name: Collect Github inputs
         id: collect-github-inputs
@@ -36,7 +36,6 @@ jobs:
           echo "sha = $github-sha"
           echo "pr = $github-pr"
         env:
-          OUTPUT1: ${{ needs.init.outputs.github-event-name }}
           github-event-name: ${{ needs.init.outputs.github-event-name }}
           github-workflow-run-id: ${{ needs.init.outputs.github-workflow-run-id }}
           github-sha: ${{ needs.init.outputs.github-sha }}
