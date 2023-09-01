@@ -26,8 +26,8 @@ jobs:
         if: github.event_name == 'issue_comment'
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: build_verification.yml
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+#          workflow: build_verification.yml
+#          github_token: ${{ secrets.GITHUB_TOKEN }}
           commit: ${{ github.sha }}
           name: build-metadata-${{ github.event.issue.number }}-${{ github.sha }}
       - name: Download Build Metadata
