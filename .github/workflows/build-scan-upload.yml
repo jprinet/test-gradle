@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Download Build Metadata
         uses: dawidd6/action-download-artifact@v2
+        with:
+          name: build-metadata-${{ github.event.issue.number }}-${{ github.sha }}
 #      - name: Collect workflow inputs
 #        env:
 #          eventName: ${{ github.event_name }}

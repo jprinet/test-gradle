@@ -29,10 +29,15 @@ runs:
       id: save-build-metadata
       run: |
         mkdir -p $BUILD_METADATA_DIR
-        cat <<EOT >> $BUILD_METADATA_DIR/build.properties
-        BUILD_RUN_ID=${{ github.run_id }}"
+
+        BUILD_RUN_ID=${{ github.run_id }}
         BUILD_SHA=${{ github.event.pull_request.head.sha }}
         BUILD_PR=${{ github.event.number }}
+
+        cat <<EOT >> $BUILD_METADATA_DIR/build.properties
+        BUILD_RUN_ID=$BUILD_RUN_ID
+        BUILD_SHA=$BUILD_SHA
+        BUILD_PR=$BUILD_PR
         EOT
         
         echo "BUILD_SHA=$BUILD_SHA" >> $GITHUB_OUTPUT
@@ -45,7 +50,7 @@ runs:
       with:
         name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_PR }}-${{ steps.save-build-metadata.outputs.BUILD_SHA }}
         path: |
-          ~/build-metadata/${{ inputs.build-tool }}
+          ~/build-metadata/${{ inputs.build-tool }}/build.properties
     - name: Upload Build Scan
       uses: actions/upload-artifact@v3
       with:
