@@ -31,10 +31,10 @@ jobs:
     needs: init
     steps:
       - run: |
-          echo "event = $github-event-name"
-          echo "run id = $github-workflow-run-id"
-          echo "sha = $github-sha"
-          echo "pr = $github-pr"
+          echo "event = ${github-event-name}"
+          echo "run id = ${github-workflow-run-id}"
+          echo "sha = ${github-sha}"
+          echo "pr = ${github-pr}"
         env:
           github-event-name: ${{ needs.init.outputs.github-event-name }}
           github-workflow-run-id: ${{ needs.init.outputs.github-workflow-run-id }}
