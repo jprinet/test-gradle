@@ -20,10 +20,12 @@ jobs:
           scanlinks: ${{ steps.publish.outputs.scanlinks }}
         with:
           script: |
-            github.context.issue.number = 166
-            github.context.issue.owner = 'jprinet'
-            github.context.issue.repo = 'jprinet/test-gradle'
-            console.log(${{github.context.issue.number}})
+            var issue = {};
+            issue['number'] = 166
+            issue['owner'] = 'jprinet'
+            issue['repo'] = 'jprinet/test-gradle'
+            github.context.issue = issue
+            console.log(${{github.context.issue}})
       - name: "Gradle Enterprise - Terms of Service approval verification"
         uses: contributor-assistant/github-action@v2.3.0
         env:
