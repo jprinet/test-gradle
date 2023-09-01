@@ -13,10 +13,10 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      github-event-name: ${{ steps.collect-github-inputs.outputs.github-event-name }}
-      github-workflow-run-id: ${{ steps.collect-github-inputs.outputs.github-workflow-run-id }}
-      github-sha: ${{ steps.collect-github-inputs.outputs.github-sha }}
-      github-pr: ${{ steps.collect-github-inputs.outputs.github-pr }}
+      EVENT_NAME: ${{ steps.collect-github-inputs.outputs.EVENT_NAME }}
+      RUN_ID: ${{ steps.collect-github-inputs.outputs.RUN_ID }}
+      SHA: ${{ steps.collect-github-inputs.outputs.SHA }}
+      PR: ${{ steps.collect-github-inputs.outputs.PR }}
     steps:
       - name: Dump GitHub context
         env:
@@ -29,10 +29,16 @@ jobs:
           echo ${{ github.event_name }}
           EVENT_NAME=${{ github.event_name }}
           RUN_ID=${{ github.event.workflow_run.id }}
+          SHA=${{ github.sha }}
+          PR=${{ ${{ github.event.issue.number }}}}
           echo "EVENT_NAME=$EVENT_NAME" >> "$GITHUB_OUTPUT"
           echo "RUN_ID=$RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "SHA=$SHA" >> "$GITHUB_OUTPUT"
+          echo "PR=$PR" >> "$GITHUB_OUTPUT"
           echo $EVENT_NAME > workflow.properties
           echo $RUN_ID >> workflow.properties
+          echo $SHA >> workflow.properties
+          echo $PR >> workflow.properties
           cat workflow.properties
       - name: Save workflow inputs
         uses: actions/upload-artifact@v3
@@ -52,13 +58,13 @@ jobs:
       - run: |
           echo "event = $EVENT_NAME"
           echo "run id = $RUN_ID"
-#          echo "sha = $SHA"
-#          echo "pr = $PR"
+          echo "sha = $SHA"
+          echo "pr = $PR"
         env:
           EVENT_NAME: ${{ needs.init.outputs.EVENT_NAME }}
           RUN_ID: ${{ needs.init.outputs.RUN_ID }}
-#          SHA: ${{ needs.init.outputs.github-sha }}
-#          PR: ${{ needs.init.outputs.github-pr }}
+          SHA: ${{ needs.init.outputs.SHA }}
+          PR: ${{ needs.init.outputs.PR }}
 
           
 
