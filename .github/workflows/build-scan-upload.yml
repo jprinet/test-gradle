@@ -13,21 +13,38 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      EVENT_NAME: ${{ steps.collect-github-inputs.outputs.EVENT_NAME }}
-      RUN_ID: ${{ steps.collect-github-inputs.outputs.RUN_ID }}
-      SHA: ${{ steps.collect-github-inputs.outputs.SHA }}
-      PR: ${{ steps.collect-github-inputs.outputs.PR }}
+      RUN_ID: ${{ steps.load-build-metadata.outputs.BUILD_RUN_ID }}
+      SHA: ${{ steps.load-build-metadata.outputs.BUILD_SHA }}
+      PR: ${{ steps.load-build-metadata.outputs.BUILD_PR }}
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+      - name: Download Build Metadata
+        if: github.event_name == 'issue_comment'
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: build-metadata-${{ github.event.issue.number }}-${{ github.sha }}
+      - name: Load Build Metadata
+        id: load-build-metadata
+        if: github.event_name == 'issue_comment'
         run: |
-          echo "$GITHUB_CONTEXT"
-#      - name: Download Build Metadata
-#        uses: dawidd6/action-download-artifact@v2
-#        with:
-#          name: build-metadata-${{ github.event.issue.number }}-${{ github.sha }}
-#      - name: Collect workflow inputs
+          source ~/build.properties
+          echo "BUILD_RUN_ID=$BUILD_RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "BUILD_SHA=$BUILD_SHA" >> "$GITHUB_OUTPUT"
+          echo "BUILD_PR=$BUILD_PR" >> "$GITHUB_OUTPUT"
+      - name: Download Build Metadata
+        if: github.event_name == 'workflow_run'
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: build-metadata-${{ github.event.workflow_run.id }}
+      - name: Load Build Metadata
+        id: load-build-metadata
+        if: github.event_name == 'workflow_run'
+        run: |
+          source ~/build.properties
+          echo "BUILD_RUN_ID=$BUILD_RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "BUILD_SHA=$BUILD_SHA" >> "$GITHUB_OUTPUT"
+          echo "BUILD_PR=$BUILD_PR" >> "$GITHUB_OUTPUT"
+
+      #      - name: Collect workflow inputs
 #        env:
 #          eventName: ${{ github.event_name }}
 #          runId: ${{ github.event.workflow_run.id }}
@@ -50,30 +67,26 @@ jobs:
 #              body: 'Something went wrong setting up the job.\n\n'
 #              + 'Refer to the logs at ' + process.env.run_url,
 #            })
-#6049685535
-#6049693642
-
-      #6049685535
-      - name: Collect workflow inputs
-        id: collect-github-inputs
-        run: |
-          EVENT_NAME=${{ github.event_name }}
-          RUN_ID=${{ github.event.workflow_run.id }}
-          SHA=${{ github.sha }}
-          PR=${{ github.event.issue.number }}
-
-          if
-
-
-          echo "EVENT_NAME=$EVENT_NAME" >> "$GITHUB_OUTPUT"
-          echo "RUN_ID=$RUN_ID" >> "$GITHUB_OUTPUT"
-          echo "SHA=$SHA" >> "$GITHUB_OUTPUT"
-          echo "PR=$PR" >> "$GITHUB_OUTPUT"
-          echo $EVENT_NAME > workflow.properties
-          echo $RUN_ID >> workflow.properties
-          echo $SHA >> workflow.properties
-          echo $PR >> workflow.properties
-          cat workflow.properties
+#      - name: Collect workflow inputs
+#        id: collect-github-inputs
+#        run: |
+#          EVENT_NAME=${{ github.event_name }}
+#          RUN_ID=${{ github.event.workflow_run.id }}
+#          SHA=${{ github.sha }}
+#          PR=${{ github.event.issue.number }}
+#
+#          if
+#
+#
+#          echo "EVENT_NAME=$EVENT_NAME" >> "$GITHUB_OUTPUT"
+#          echo "RUN_ID=$RUN_ID" >> "$GITHUB_OUTPUT"
+#          echo "SHA=$SHA" >> "$GITHUB_OUTPUT"
+#          echo "PR=$PR" >> "$GITHUB_OUTPUT"
+#          echo $EVENT_NAME > workflow.properties
+#          echo $RUN_ID >> workflow.properties
+#          echo $SHA >> workflow.properties
+#          echo $PR >> workflow.properties
+#          cat workflow.properties
 #      - name: Save workflow inputs
 #        uses: actions/upload-artifact@v3
 #        with:
@@ -81,21 +94,21 @@ jobs:
 #          path: |
 #            ~/build-metadata/${{ inputs.build-tool }}
 
-  consume:
-    runs-on: ubuntu-latest
-    needs: init
-    steps:
-      - run: |
-          echo "event = $EVENT_NAME"
-          echo "run id = $RUN_ID"
-          echo "sha = $SHA"
-          echo "pr = $PR"
-        env:
-          EVENT_NAME: ${{ needs.init.outputs.EVENT_NAME }}
-          RUN_ID: ${{ needs.init.outputs.RUN_ID }}
-          SHA: ${{ needs.init.outputs.SHA }}
-          PR: ${{ needs.init.outputs.PR }}
-
+#  consume:
+#    runs-on: ubuntu-latest
+#    needs: init
+#    steps:
+#      - run: |
+#          echo "event = $EVENT_NAME"
+#          echo "run id = $RUN_ID"
+#          echo "sha = $SHA"
+#          echo "pr = $PR"
+#        env:
+#          EVENT_NAME: ${{ needs.init.outputs.EVENT_NAME }}
+#          RUN_ID: ${{ needs.init.outputs.RUN_ID }}
+#          SHA: ${{ needs.init.outputs.SHA }}
+#          PR: ${{ needs.init.outputs.PR }}
+#
           
 
   GE-TOS:
@@ -110,4 +123,11 @@ jobs:
 #    secrets: inherit
   publish-maven-build-scans:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
+    needs:
+      - init
+      - GE-TOS
+    with:
+      build-run-id: ${{ needs.init.outputs.BUILD_RUN_ID }}
+      build-sha: ${{ needs.init.outputs.BUILD_SHA }}
+      build-pr: ${{ needs.init.outputs.BUILD_PR }}
     secrets: inherit

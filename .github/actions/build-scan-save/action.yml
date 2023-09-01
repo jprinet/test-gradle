@@ -25,7 +25,7 @@ runs:
         # create unique name for upload artifact
         echo "uuid=$(cat /proc/sys/kernel/random/uuid)" >> "$GITHUB_OUTPUT"
       shell: bash
-    - name: Save Build Information
+    - name: Save Build Metadata
       id: save-build-metadata
       run: |
         mkdir -p $BUILD_METADATA_DIR
@@ -34,7 +34,7 @@ runs:
         BUILD_SHA=${{ github.event.pull_request.head.sha }}
         BUILD_PR=${{ github.event.number }}
 
-        cat <<EOT >> $BUILD_METADATA_DIR/build.properties
+        cat <<EOT >> ~/build.properties
         BUILD_RUN_ID=$BUILD_RUN_ID
         BUILD_SHA=$BUILD_SHA
         BUILD_PR=$BUILD_PR
@@ -45,12 +45,18 @@ runs:
         
         cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
       shell: bash
-    - name: Upload Build Properties
+    - name: Upload Build Metadata
       uses: actions/upload-artifact@v3
       with:
         name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_PR }}-${{ steps.save-build-metadata.outputs.BUILD_SHA }}
         path: |
-          ~/build-metadata/${{ inputs.build-tool }}/build.properties
+          ~/build.properties
+    - name: Upload Build Metadata
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_RUN_ID }}
+        path: |
+          ~/build.properties
     - name: Upload Build Scan
       uses: actions/upload-artifact@v3
       with:
