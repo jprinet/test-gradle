@@ -17,6 +17,11 @@ jobs:
       BUILD_SHA: ${{ steps.load-build-metadata.outputs.BUILD_SHA }}
       BUILD_PR: ${{ steps.load-build-metadata.outputs.BUILD_PR }}
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
       - name: Download Build Metadata
         if: github.event_name == 'issue_comment'
         uses: dawidd6/action-download-artifact@v2
