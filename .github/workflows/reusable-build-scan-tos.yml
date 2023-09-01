@@ -13,6 +13,13 @@ jobs:
     if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms') || github.event_name == 'workflow_run'
     runs-on: ubuntu-latest
     steps:
+      - name: override context
+        run: |
+          echo ${{context.issue.number}}
+          context.issue.number = 166
+          context.issue.owner = 'jprinet'
+          context.issue.repo = 'jprinet/test-gradle'
+          echo ${{context.issue.number}}
       - name: "Gradle Enterprise - Terms of Service approval verification"
         uses: contributor-assistant/github-action@v2.3.0
         env:
