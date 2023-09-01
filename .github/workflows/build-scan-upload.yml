@@ -28,7 +28,7 @@ jobs:
         with:
           pr: ${{ github.event.issue.number }}
           workflow_conclusion: success
-#          workflow: build_verification.yml
+          workflow: build_verification.yml
 #          github_token: ${{ secrets.GITHUB_TOKEN }}
 #          commit: ${{ github.sha }}
           name: build-metadata-${{ github.event.issue.number }}-${{ github.sha }}
