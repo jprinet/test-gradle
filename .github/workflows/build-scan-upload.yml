@@ -18,6 +18,11 @@ jobs:
       SHA: ${{ steps.collect-github-inputs.outputs.SHA }}
       PR: ${{ steps.collect-github-inputs.outputs.PR }}
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
 #      - name: Download Build Metadata
 #        uses: dawidd6/action-download-artifact@v2
 #        with:
