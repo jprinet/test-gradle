@@ -31,8 +31,7 @@ runs:
         mkdir -p $BUILD_METADATA_DIR
 
         BUILD_RUN_ID=${{ github.run_id }}
-        #BUILD_SHA=${{ github.event.pull_request.head.sha }}
-        BUILD_SHA=${{ github.event.pull_request.base.sha }}
+        BUILD_SHA=${{ github.event.pull_request.head.sha }}
         BUILD_PR=${{ github.event.number }}
 
         cat <<EOT >> ~/build.properties
@@ -50,7 +49,7 @@ runs:
     - name: Upload Build Metadata
       uses: actions/upload-artifact@v3
       with:
-        name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_PR }}-${{ steps.save-build-metadata.outputs.BUILD_SHA }}
+        name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_PR }}
         path: |
           ~/build.properties
     - name: Upload Build Metadata
