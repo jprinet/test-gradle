@@ -40,6 +40,7 @@ runs:
         BUILD_PR=$BUILD_PR
         EOT
         
+        echo "BUILD_RUN_ID=$BUILD_RUN_ID" >> $GITHUB_OUTPUT
         echo "BUILD_SHA=$BUILD_SHA" >> $GITHUB_OUTPUT
         echo "BUILD_PR=$BUILD_PR" >> $GITHUB_OUTPUT
         
