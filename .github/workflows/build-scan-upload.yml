@@ -23,11 +23,6 @@ jobs:
       BUILD_SHA: ${{ steps.load-build-metadata.outputs.BUILD_SHA }}
       BUILD_PR: ${{ steps.load-build-metadata.outputs.BUILD_PR }}
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          echo "$GITHUB_CONTEXT"
       - name: Download Build Metadata
         if: github.event_name == 'issue_comment'
         uses: dawidd6/action-download-artifact@v2
@@ -59,12 +54,15 @@ jobs:
 
 #  publish-gradle-build-scans:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
+#    needs: GE-TOS
+#    with:
+#      build-run-id: ${{ needs.init.outputs.BUILD_RUN_ID }}
+#      build-sha: ${{ needs.init.outputs.BUILD_SHA }}
+#      build-pr: ${{ needs.init.outputs.BUILD_PR }}
 #    secrets: inherit
   publish-maven-build-scans:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
-    needs:
-      - init
-      - GE-TOS
+    needs: GE-TOS
     with:
       build-run-id: ${{ needs.init.outputs.BUILD_RUN_ID }}
       build-sha: ${{ needs.init.outputs.BUILD_SHA }}

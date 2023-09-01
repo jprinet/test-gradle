@@ -42,40 +42,40 @@ jobs:
         run: |
           # cp --backup=numbered allows to avoid error with duplicates "cp: will not overwrite just-created <filename> with <sameFilename>"
           cp -r --backup=numbered $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
-      - name: Wait for approval of Gradle Enterprise TOS
-        uses: actions/github-script@v6
-        id: check-tos
-        env:
-          sha: ${{ inputs.build-sha }}
-          pr: ${{ inputs.build-pr }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          result-encoding: string
-          script: |
-            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-            
-            // Run several checks to allow delayed approval
-            for(let i = 1; i < 5; i++, await delay(15000)) {
-              console.log('Attempt ' + i);
-              // returns most recent check runs first by default
-              const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
-                ref: process.env.sha,
-                per_page: 50
-              });
-              for await (const cr of checkRuns) {
-                console.log('Found execution of ' + cr.name);
-                // check only last execution of the TOS workflow
-                if(cr.name == '${{ inputs.tos-workflow-name }}') {
-                  console.log('Found execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
-                  if(cr.conclusion == 'success') {
-                    return;
-                  } else {
-                    throw new Error('Found failed execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
-                  }
-                }
-              }
-            }
-            throw new Error('No execution found for ${{ inputs.tos-workflow-name }}');
+#      - name: Wait for approval of Gradle Enterprise TOS
+#        uses: actions/github-script@v6
+#        id: check-tos
+#        env:
+#          sha: ${{ inputs.build-sha }}
+#          pr: ${{ inputs.build-pr }}
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          result-encoding: string
+#          script: |
+#            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+#
+#            // Run several checks to allow delayed approval
+#            for(let i = 1; i < 5; i++, await delay(15000)) {
+#              console.log('Attempt ' + i);
+#              // returns most recent check runs first by default
+#              const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
+#                ref: process.env.sha,
+#                per_page: 50
+#              });
+#              for await (const cr of checkRuns) {
+#                console.log('Found execution of ' + cr.name);
+#                // check only last execution of the TOS workflow
+#                if(cr.name == '${{ inputs.tos-workflow-name }}') {
+#                  console.log('Found execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
+#                  if(cr.conclusion == 'success') {
+#                    return;
+#                  } else {
+#                    throw new Error('Found failed execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
+#                  }
+#                }
+#              }
+#            }
+#            throw new Error('No execution found for ${{ inputs.tos-workflow-name }}');
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
