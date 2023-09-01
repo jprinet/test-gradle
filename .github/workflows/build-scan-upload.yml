@@ -29,11 +29,7 @@ jobs:
           pr: ${{ github.event.issue.number }}
           workflow_conclusion: success
           workflow: build-verification.yml
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          commit: ${{ github.sha }}
           name: build-metadata-${{ github.event.issue.number }}
-#          search_artifacts: true
-#          check_artifacts: true
       - name: Download Build Metadata
         if: github.event_name == 'workflow_run'
         uses: dawidd6/action-download-artifact@v2
@@ -47,73 +43,6 @@ jobs:
           echo "BUILD_RUN_ID=$BUILD_RUN_ID" >> "$GITHUB_OUTPUT"
           echo "BUILD_SHA=$BUILD_SHA" >> "$GITHUB_OUTPUT"
           echo "BUILD_PR=$BUILD_PR" >> "$GITHUB_OUTPUT"
-
-      #      - name: Collect workflow inputs
-#        env:
-#          eventName: ${{ github.event_name }}
-#          runId: ${{ github.event.workflow_run.id }}
-#          sha: ${{ github.sha }}
-#          pr: ${{ github.event.issue.number }}
-#        uses: actions/github-script@v3
-#        with:
-#          script: |
-#            let pr = ''
-#            if(eventName == 'issue_comment') {
-#              pr = process.env.pr
-#            } else if(eventName == 'workflow_run') {
-#
-#            }
-#
-#            await github.issues.createComment({
-#              issue_number: process.env.issue_id,
-#              owner: context.repo.owner,
-#              repo: context.repo.repo,
-#              body: 'Something went wrong setting up the job.\n\n'
-#              + 'Refer to the logs at ' + process.env.run_url,
-#            })
-#      - name: Collect workflow inputs
-#        id: collect-github-inputs
-#        run: |
-#          EVENT_NAME=${{ github.event_name }}
-#          RUN_ID=${{ github.event.workflow_run.id }}
-#          SHA=${{ github.sha }}
-#          PR=${{ github.event.issue.number }}
-#
-#          if
-#
-#
-#          echo "EVENT_NAME=$EVENT_NAME" >> "$GITHUB_OUTPUT"
-#          echo "RUN_ID=$RUN_ID" >> "$GITHUB_OUTPUT"
-#          echo "SHA=$SHA" >> "$GITHUB_OUTPUT"
-#          echo "PR=$PR" >> "$GITHUB_OUTPUT"
-#          echo $EVENT_NAME > workflow.properties
-#          echo $RUN_ID >> workflow.properties
-#          echo $SHA >> workflow.properties
-#          echo $PR >> workflow.properties
-#          cat workflow.properties
-#      - name: Save workflow inputs
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: workflow-inputs-${{ inputs.build-tool }}-${{ steps.set-env.outputs.uuid }}
-#          path: |
-#            ~/build-metadata/${{ inputs.build-tool }}
-
-#  consume:
-#    runs-on: ubuntu-latest
-#    needs: init
-#    steps:
-#      - run: |
-#          echo "event = $EVENT_NAME"
-#          echo "run id = $RUN_ID"
-#          echo "sha = $SHA"
-#          echo "pr = $PR"
-#        env:
-#          EVENT_NAME: ${{ needs.init.outputs.EVENT_NAME }}
-#          RUN_ID: ${{ needs.init.outputs.RUN_ID }}
-#          SHA: ${{ needs.init.outputs.SHA }}
-#          PR: ${{ needs.init.outputs.PR }}
-#
-          
 
   GE-TOS:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-tos.yml@v1

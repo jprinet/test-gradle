@@ -63,6 +63,7 @@ jobs:
                 per_page: 50
               });
               for await (const cr of checkRuns) {
+                console.log('Found execution of ' + cr.name);
                 // check only last execution of the TOS workflow
                 if(cr.name == '${{ inputs.tos-workflow-name }}') {
                   console.log('Found execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
