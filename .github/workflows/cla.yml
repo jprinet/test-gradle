@@ -13,5 +13,5 @@ permissions:
 
 jobs:
   GE-TOS:
-    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-tos.yml
+    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-tos.yml@v1
     secrets: inherit
