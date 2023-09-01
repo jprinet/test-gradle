@@ -22,7 +22,6 @@ jobs:
       - name: Debug
         run: |
           echo "github.event.workflow_run.id = ${{ github.run.id }}"
-          echo "github.event.workflow_run.id = ${{ run.id }}"
       - name: Build with Maven 1
         run: mvn clean
       - name: Save Build Scan 1
