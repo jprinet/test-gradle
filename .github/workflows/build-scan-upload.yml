@@ -16,10 +16,10 @@ jobs:
 
   publish-gradle-build-scans:
 #    needs: GE-TOS
-    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml
+    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
     secrets: inherit
 
   publish-maven-build-scans:
 #    needs: GE-TOS
-    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml
+    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
     secrets: inherit
