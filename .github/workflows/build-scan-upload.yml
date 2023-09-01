@@ -18,11 +18,8 @@ jobs:
       SHA: ${{ steps.collect-github-inputs.outputs.SHA }}
       PR: ${{ steps.collect-github-inputs.outputs.PR }}
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          echo "$GITHUB_CONTEXT"
+      - name: Download Build Metadata
+        uses: dawidd6/action-download-artifact@v2
 #      - name: Collect workflow inputs
 #        env:
 #          eventName: ${{ github.event_name }}
@@ -46,7 +43,10 @@ jobs:
 #              body: 'Something went wrong setting up the job.\n\n'
 #              + 'Refer to the logs at ' + process.env.run_url,
 #            })
-#
+#6049685535
+#6049693642
+
+      #6049685535
       - name: Collect workflow inputs
         id: collect-github-inputs
         run: |
