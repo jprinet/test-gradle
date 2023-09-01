@@ -46,10 +46,16 @@ runs:
         
         cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
       shell: bash
+#    - name: Upload Build Metadata
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_PR }}-${{ steps.save-build-metadata.outputs.BUILD_SHA }}
+#        path: |
+#          ~/build.properties
     - name: Upload Build Metadata
       uses: actions/upload-artifact@v3
       with:
-        name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_PR }}-${{ steps.save-build-metadata.outputs.BUILD_SHA }}
+        name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_PR }}-{{ github.event.pull_request.base.repo.sha }}
         path: |
           ~/build.properties
     - name: Upload Build Metadata
