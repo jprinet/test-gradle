@@ -1,23 +1,25 @@
 name: PR Build Scan Upload
 
 on:
-    workflow_run:
-        workflows: [ "PR Build" ]
-        types: [ completed ]
+  workflow_run:
+    workflows: [ "PR Build" ]
+    types: [ completed ]
+#  pull_request:
+#    types: [ opened,closed,synchronize ]
+#  issue_comment:
+#    types: [ created ]
 
 jobs:
-    upload-gradle:
-        name: Gradle Build Scan Upload
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                build-tool: [ "gradle", "maven" ]
-        permissions:
-            pull-requests: write
-        steps:
-            -   name: "Gradle Enterprise Build Scan upload"
-                uses: jprinet/test-gradle/.github/actions/build-scan-upload@v1
-                with:
-                    token: ${{ secrets.GITHUB_TOKEN }}
-                    ge-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-                    build-tool: ${{ matrix.build-tool }}
+#  GE-TOS:
+#    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-tos.yml
+#    secrets: inherit
+
+  publish-gradle-build-scans:
+#    needs: GE-TOS
+    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml
+    secrets: inherit
+
+  publish-maven-build-scans:
+#    needs: GE-TOS
+    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml
+    secrets: inherit

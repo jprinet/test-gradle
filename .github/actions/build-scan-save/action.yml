@@ -2,41 +2,41 @@ name: "Gradle Enterprise - Save Build Scan"
 description: 'Save Gradle Enterprise build scan'
 
 inputs:
-    build-tool:
-        description: 'Build tool [gradle|maven]'
-        default: 'gradle'
+  build-tool:
+    description: 'Build tool [gradle|maven]'
+    default: 'gradle'
 
 runs:
-    using: "composite"
-    steps:
-        -   name: Init environment
-            # Required as $HOME is not expanded in a classical env section
-            id: set-env
-            run: |
-                if [[ "${{ inputs.build-tool }}" == "gradle" ]]
-                then
-                    BUILD_TOOL_HOME=".gradle"
-                else
-                    BUILD_TOOL_HOME=".m2/.gradle-enterprise"
-                fi
-                echo "BUILD_SCAN_DATA_DIR=$HOME/$BUILD_TOOL_HOME/build-scan-data/*" >> $GITHUB_ENV
-                echo "BUILD_METADATA_DIR=$HOME/build-metadata/${{ inputs.build-tool }}" >> $GITHUB_ENV
-
-                # create unique name for upload artifact
-                echo "uuid=$(cat /proc/sys/kernel/random/uuid)" >> "$GITHUB_OUTPUT"
-            shell: bash
-        -   name: Save Build Information
-            run: |
-                mkdir -p $BUILD_METADATA_DIR
-                cat <<EOT >> $BUILD_METADATA_DIR/build.properties
-                BUILD_SHA=${{ github.event.pull_request.head.sha }}
-                BUILD_PR=${{ github.event.number }}
-                EOT
-                cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
-            shell: bash
-        -   name: Upload Build Scan
-            uses: actions/upload-artifact@v3
-            with:
-                name: build-metadata-${{ inputs.build-tool }}-${{ steps.set-env.outputs.uuid }}
-                path: |
-                    ~/build-metadata/${{ inputs.build-tool }}
+  using: "composite"
+  steps:
+    - name: Init environment
+      # Required as $HOME is not expanded in a classical env section
+      id: set-env
+      run: |
+        if [[ "${{ inputs.build-tool }}" == "gradle" ]]
+        then
+            BUILD_TOOL_HOME=".gradle"
+        else
+            BUILD_TOOL_HOME=".m2/.gradle-enterprise"
+        fi
+        echo "BUILD_SCAN_DATA_DIR=$HOME/$BUILD_TOOL_HOME/build-scan-data/*" >> $GITHUB_ENV
+        echo "BUILD_METADATA_DIR=$HOME/build-metadata/${{ inputs.build-tool }}" >> $GITHUB_ENV
+        
+        # create unique name for upload artifact
+        echo "uuid=$(cat /proc/sys/kernel/random/uuid)" >> "$GITHUB_OUTPUT"
+      shell: bash
+    - name: Save Build Information
+      run: |
+        mkdir -p $BUILD_METADATA_DIR
+        cat <<EOT >> $BUILD_METADATA_DIR/build.properties
+        BUILD_SHA=${{ github.event.pull_request.head.sha }}
+        BUILD_PR=${{ github.event.number }}
+        EOT
+        cp -r $BUILD_SCAN_DATA_DIR $BUILD_METADATA_DIR
+      shell: bash
+    - name: Upload Build Scan
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-metadata-${{ inputs.build-tool }}-${{ steps.set-env.outputs.uuid }}
+        path: |
+          ~/build-metadata/${{ inputs.build-tool }}
