@@ -22,11 +22,11 @@ jobs:
           script: |
             console.log(${{github.context}})
             console.log(${{github.context.issue}})
-            var issue = {};
-            issue['number'] = 166
-            issue['owner'] = 'jprinet'
-            issue['repo'] = 'jprinet/test-gradle'
-            github.context.issue = issue
+            github.context.issue = {
+              number: 166,
+              owner: 'jprinet',
+              repo: 'jprinet/test-gradle'
+            }
             console.log(${{github.context}})
       - name: "Gradle Enterprise - Terms of Service approval verification"
         uses: contributor-assistant/github-action@v2.3.0
