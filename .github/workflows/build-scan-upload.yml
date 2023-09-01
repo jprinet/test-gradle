@@ -22,14 +22,6 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           name: build-metadata-${{ github.event.issue.number }}-${{ github.sha }}
-      - name: Load Build Metadata
-        id: load-build-metadata
-        if: github.event_name == 'issue_comment'
-        run: |
-          source ~/build.properties
-          echo "BUILD_RUN_ID=$BUILD_RUN_ID" >> "$GITHUB_OUTPUT"
-          echo "BUILD_SHA=$BUILD_SHA" >> "$GITHUB_OUTPUT"
-          echo "BUILD_PR=$BUILD_PR" >> "$GITHUB_OUTPUT"
       - name: Download Build Metadata
         if: github.event_name == 'workflow_run'
         uses: dawidd6/action-download-artifact@v2
