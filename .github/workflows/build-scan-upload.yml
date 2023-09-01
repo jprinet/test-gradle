@@ -32,10 +32,7 @@ jobs:
         id: load-build-metadata
         if: github.event_name == 'workflow_run'
         run: |
-          pwd
-          ls -la
-          ls -la ~
-          source ~/build.properties
+          source build.properties
           echo "BUILD_RUN_ID=$BUILD_RUN_ID" >> "$GITHUB_OUTPUT"
           echo "BUILD_SHA=$BUILD_SHA" >> "$GITHUB_OUTPUT"
           echo "BUILD_PR=$BUILD_PR" >> "$GITHUB_OUTPUT"
