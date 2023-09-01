@@ -55,7 +55,7 @@ runs:
     - name: Upload Build Metadata
       uses: actions/upload-artifact@v3
       with:
-        name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_PR }}-{{ github.event.pull_request.base.repo.sha }}
+        name: build-metadata-${{ steps.save-build-metadata.outputs.BUILD_PR }}-{{ github.event.pull_request.base.sha }}
         path: |
           ~/build.properties
     - name: Upload Build Metadata
