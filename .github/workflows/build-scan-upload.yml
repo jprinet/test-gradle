@@ -30,7 +30,7 @@ jobs:
           EVENT_NAME=${{ github.event_name }}
           RUN_ID=${{ github.event.workflow_run.id }}
           SHA=${{ github.sha }}
-          PR=${{ ${{ github.event.issue.number }}}}
+          PR=${{ github.event.issue.number }}
           echo "EVENT_NAME=$EVENT_NAME" >> "$GITHUB_OUTPUT"
           echo "RUN_ID=$RUN_ID" >> "$GITHUB_OUTPUT"
           echo "SHA=$SHA" >> "$GITHUB_OUTPUT"
