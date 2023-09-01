@@ -12,12 +12,37 @@ on:
 jobs:
   init:
     runs-on: ubuntu-latest
+    outputs:
+      github-event-name: ${{ steps.collect-github-inputs.github-event-name }}
+      github-workflow-run-id: ${{ steps.collect-github-inputs.github-workflow-run-id }}
+      github-sha: ${{ steps.collect-github-inputs.github-sha }}
+      github-pr: ${{ steps.collect-github-inputs.github-pr }}
     steps:
-      - name: Check Workflow Run Id
+      - name: Collect Github inputs
+        id: collect-github-inputs
         run: |
-          echo "github.event_name: ${{ github.event_name }}"
-          echo "github.ref: ${{ github.ref }}"
-          echo "github.event.workflow_run.id = ${{ github.event.workflow_run.id }}"
+          echo "github-event-name=${{ github.event_name }}" >> "$GITHUB_OUTPUT"
+          echo "github-workflow-run-id=${{ github.event.workflow_run.id }}" >> "$GITHUB_OUTPUT"
+          echo "github-sha=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_OUTPUT"
+          echo "github-pr=${{ github.event.number }}" >> "$GITHUB_OUTPUT"
+
+  consume:
+    runs-on: ubuntu-latest
+    needs: init
+    steps:
+      - run: |
+          echo "event = $github-event-name"
+          echo "run id = $github-workflow-run-id"
+          echo "sha = $github-sha"
+          echo "pr = $github-pr"
+        env:
+          OUTPUT1: ${{ needs.init.outputs.github-event-name }}
+          github-event-name: ${{ needs.init.outputs.github-event-name }}
+          github-workflow-run-id: ${{ needs.init.outputs.github-workflow-run-id }}
+          github-sha: ${{ needs.init.outputs.github-sha }}
+          github-pr: ${{ needs.init.outputs.github-pr }}
+
+          
 
 #  GE-TOS:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-tos.yml@v1
