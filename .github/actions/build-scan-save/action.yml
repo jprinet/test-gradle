@@ -32,7 +32,7 @@ runs:
 
         BUILD_RUN_ID=${{ github.run_id }}
         #BUILD_SHA=${{ github.event.pull_request.head.sha }}
-        BUILD_SHA={{ github.event.pull_request.base.sha }}
+        BUILD_SHA=${{ github.event.pull_request.base.sha }}
         BUILD_PR=${{ github.event.number }}
 
         cat <<EOT >> ~/build.properties
