@@ -13,9 +13,9 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      RUN_ID: ${{ steps.load-build-metadata.outputs.BUILD_RUN_ID }}
-      SHA: ${{ steps.load-build-metadata.outputs.BUILD_SHA }}
-      PR: ${{ steps.load-build-metadata.outputs.BUILD_PR }}
+      BUILD_RUN_ID: ${{ steps.load-build-metadata.outputs.BUILD_RUN_ID }}
+      BUILD_SHA: ${{ steps.load-build-metadata.outputs.BUILD_SHA }}
+      BUILD_PR: ${{ steps.load-build-metadata.outputs.BUILD_PR }}
     steps:
       - name: Download Build Metadata
         if: github.event_name == 'issue_comment'
