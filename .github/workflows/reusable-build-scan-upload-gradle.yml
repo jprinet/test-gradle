@@ -26,6 +26,8 @@ jobs:
         # Required as $HOME is not expanded in a classical env section
         id: init-env
         run: |
+          echo "github.event.workflow_run.id = ${{ github.event.workflow_run.id }}"
+          
           BUILD_TOOL_HOME=".gradle"
           BUILD_METADATA_DIR="build-metadata-gradle-*"
           BUILD_SCAN_DATA_DIR="$HOME/$BUILD_TOOL_HOME/build-scan-data"
