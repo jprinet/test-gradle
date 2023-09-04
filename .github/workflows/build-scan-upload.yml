@@ -51,7 +51,7 @@ jobs:
     with:
       path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
       issue-owner: 'jprinet'
-      issue-repo: 'jprinet/test-gradle'
+      issue-repo: 'test-gradle'
       issue-number: ${{ needs.init.outputs.BUILD_PR }}
     secrets: inherit
 
