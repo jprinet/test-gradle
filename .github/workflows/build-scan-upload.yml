@@ -1,14 +1,14 @@
 name: Upload PR Build Scans
 
-env:
-  PR_BUILD_WORKFLOW_FILE_NAME: "build.yml"
-
 on:
   workflow_run:
     workflows: [ "PR Build" ]
     types: [ completed ]
   issue_comment:
     types: [ created ]
+
+env:
+  PR_BUILD_WORKFLOW_FILE_NAME: build.yml
 
 jobs:
   init:
