@@ -50,6 +50,10 @@ jobs:
     needs: init
     with:
       path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
+      issue-owner: 'jprinet'
+      issue-repo: 'jprinet/test-gradle'
+      issue-number: ${{ needs.init.outputs.BUILD_PR }}
+      build-sha: ${{ needs.init.outputs.BUILD_SHA }}
     secrets: inherit
 
 #  publish-gradle-build-scans:
