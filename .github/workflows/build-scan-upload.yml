@@ -37,7 +37,7 @@ jobs:
 #      build-run-id: ${{ needs.init.outputs.build-run-id }}
 #      build-pr: ${{ needs.init.outputs.build-pr }}
 #    secrets:
-#      GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+#      GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
   publish-maven-build-scans:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
     needs: [ init, check-terms-of-service ]
@@ -45,4 +45,4 @@ jobs:
       build-run-id: ${{ needs.init.outputs.build-run-id }}
       build-pr: ${{ needs.init.outputs.build-pr }}
     secrets:
-      GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+      GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
