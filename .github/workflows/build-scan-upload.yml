@@ -28,20 +28,20 @@ jobs:
       path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
       issue-owner: 'jprinet'
       issue-repo: 'test-gradle'
-      issue-number: ${{ needs.init.outputs.BUILD_PR }}
+      issue-number: ${{ needs.init.outputs.build-pr }}
     secrets: inherit
 
 #  publish-gradle-build-scans:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
 #    needs: check-terms-of-service
 #    with:
-#      build-run-id: ${{ needs.init.outputs.BUILD_RUN_ID }}
-#      build-pr: ${{ needs.init.outputs.BUILD_PR }}
+#      build-run-id: ${{ needs.init.outputs.build-run-id }}
+#      build-pr: ${{ needs.init.outputs.build-pr }}
 #    secrets: inherit
   publish-maven-build-scans:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
     needs: check-terms-of-service
     with:
-      build-run-id: ${{ needs.init.outputs.BUILD_RUN_ID }}
-      build-pr: ${{ needs.init.outputs.BUILD_PR }}
+      build-run-id: ${{ needs.init.outputs.build-run-id }}
+      build-pr: ${{ needs.init.outputs.build-pr }}
     secrets: inherit
