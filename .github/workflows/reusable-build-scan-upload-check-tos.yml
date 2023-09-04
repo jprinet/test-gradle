@@ -4,7 +4,6 @@ on:
   workflow_call:
     inputs:
       default-branch:
-        required: true
         type: string
         default: 'main'
       issue-owner:
