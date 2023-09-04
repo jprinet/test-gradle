@@ -33,6 +33,8 @@ jobs:
 #  publish-gradle-build-scans:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
 #    needs: [ init, check-terms-of-service ]
+#    permissions:
+#      pull-requests: write
 #    with:
 #      build-run-id: ${{ needs.init.outputs.build-run-id }}
 #      build-pr: ${{ needs.init.outputs.build-pr }}
@@ -41,6 +43,8 @@ jobs:
   publish-maven-build-scans:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
     needs: [ init, check-terms-of-service ]
+    permissions:
+      pull-requests: write
     with:
       build-run-id: ${{ needs.init.outputs.build-run-id }}
       build-pr: ${{ needs.init.outputs.build-pr }}
