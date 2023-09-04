@@ -12,6 +12,9 @@ on:
     secrets:
       GRADLE_ENTERPRISE_ACCESS_KEY:
         required: true
+      TOKEN:
+        description: "Github Token"
+        required: true
 
 jobs:
   build-scan-upload:
@@ -78,6 +81,7 @@ jobs:
           pr: ${{ steps.init-env.outputs.pr }}
           scanlinks: ${{ steps.publish.outputs.scanlinks }}
         with:
+          github-token: ${{ secrets.TOKEN }}
           script: |
             const prNumber = Number(process.env.pr);
             const message = process.env.scanlinks;

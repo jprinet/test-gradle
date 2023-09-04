@@ -46,3 +46,4 @@ jobs:
       build-pr: ${{ needs.init.outputs.build-pr }}
     secrets:
       GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}

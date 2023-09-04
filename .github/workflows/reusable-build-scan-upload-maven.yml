@@ -11,6 +11,10 @@ on:
         type: string
     secrets:
       GRADLE_ENTERPRISE_ACCESS_KEY:
+        description: "Gradle Enterprise Access Key"
+        required: true
+      TOKEN:
+        description: "Github Token"
         required: true
 
 jobs:
@@ -74,6 +78,7 @@ jobs:
           pr: ${{ inputs.build-pr }}
           scanlinks: ${{ steps.publish.outputs.scanlinks }}
         with:
+          github-token: ${{ secrets.TOKEN }}
           script: |
             const prNumber = Number(process.env.pr);
             const message = process.env.scanlinks;
