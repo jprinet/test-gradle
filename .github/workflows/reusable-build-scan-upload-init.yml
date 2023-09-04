@@ -7,12 +7,12 @@ on:
         required: true
         type: string
     outputs:
-      build-pr:
-        description: "The first output string"
-        value: ${{ jobs.init.outputs.BUILD_PR }}
       build-run-id:
-        description: "The second output string"
-        value: ${{ jobs.init.outputs.BUILD_RUN_ID }}
+        description: "Build Workflow Run Id"
+        value: ${{ jobs.init.outputs.build-run-id }}
+      build-pr:
+        description: "Build PR Number"
+        value: ${{ jobs.init.outputs.build-pr }}
 
 jobs:
   init:
@@ -39,5 +39,7 @@ jobs:
         id: load-build-metadata
         run: |
           source build.properties
+          echo "BUILD_RUN_ID=$BUILD_RUN_ID"
+          echo "BUILD_PR=$BUILD_PR"
           echo "BUILD_RUN_ID=$BUILD_RUN_ID" >> "$GITHUB_OUTPUT"
           echo "BUILD_PR=$BUILD_PR" >> "$GITHUB_OUTPUT"

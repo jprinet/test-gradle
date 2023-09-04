@@ -4,10 +4,10 @@ on:
   workflow_call:
     inputs:
       build-run-id:
-        description: "Build Run ID"
+        description: "Build Workflow Run Id"
         type: string
       build-pr:
-        description: "Build PR"
+        description: "Build PR Number"
         type: string
 
 jobs:
