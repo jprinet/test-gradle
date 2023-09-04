@@ -28,8 +28,7 @@ jobs:
       issue-owner: 'jprinet'
       issue-repo: 'test-gradle'
       issue-number: ${{ needs.init.outputs.build-pr }}
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    secrets: inherit
 
 #  publish-gradle-build-scans:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
