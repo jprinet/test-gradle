@@ -7,11 +7,6 @@ jobs:
     name: Init
     runs-on: ubuntu-latest
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: |
-          echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8
@@ -19,16 +14,12 @@ jobs:
         with:
           java-version: '8'
           distribution: 'temurin'
-      - name: Debug
-        run: |
-          echo "github.event.workflow_run.id = ${{ github.run_id }}"
       - name: Build with Maven 1
         run: mvn clean
       - name: Save Build Scan 1
         uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
         with:
           build-tool: "maven"
-
 #      - name: Build with Maven 2
 #        run: mvn initialize
 #      - name: Save Build Scan 2

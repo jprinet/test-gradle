@@ -3,15 +3,11 @@ name: "Gradle Enterprise Build Scan Upload"
 on:
   workflow_call:
     inputs:
-      tos-workflow-name:
-        description: "Name of the Github Workflow checking TOS Approval"
-        required: false
-        default: "GE-TOS"
+      build-run-id:
+        description: "Build Run ID"
         type: string
-      project-basedir:
-        description: "Project base directory"
-        required: false
-        default: "."
+      build-pr:
+        description: "Build PR"
         type: string
 
 jobs:
@@ -26,15 +22,9 @@ jobs:
         # Required as $HOME is not expanded in a classical env section
         id: init-env
         run: |
-          echo "github.event.workflow_run.id = ${{ github.event.workflow_run.id }}"
-          
           BUILD_TOOL_HOME=".gradle"
           BUILD_METADATA_DIR="build-metadata-gradle-*"
           BUILD_SCAN_DATA_DIR="$HOME/$BUILD_TOOL_HOME/build-scan-data"
-          
-          source $BUILD_METADATA_DIR/build.properties
-          echo "sha=$(echo ${BUILD_SHA})" >> $GITHUB_OUTPUT
-          echo "pr=$(echo ${BUILD_PR})" >> $GITHUB_OUTPUT
           
           echo "BUILD_SCAN_DATA_DIR=$BUILD_SCAN_DATA_DIR" >> $GITHUB_ENV
           echo "BUILD_METADATA_DIR=$BUILD_METADATA_DIR" >> $GITHUB_ENV
@@ -44,39 +34,6 @@ jobs:
         run: |
           # cp --backup=numbered allows to avoid error with duplicates "cp: will not overwrite just-created <filename> with <sameFilename>"
           cp -r --backup=numbered $BUILD_METADATA_DIR/* $BUILD_SCAN_DATA_DIR
-      - name: Wait for approval of Gradle Enterprise TOS
-        uses: actions/github-script@v6
-        id: check-tos
-        env:
-          sha: ${{ steps.init-env.outputs.sha }}
-          pr: ${{ steps.init-env.outputs.pr }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          result-encoding: string
-          script: |
-            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-            
-            // Run several checks to allow delayed approval
-            for(let i = 1; i < 5; i++, await delay(15000)) {
-              console.log('Attempt ' + i);
-              // returns most recent check runs first by default
-              const checkRuns = await github.paginate('GET /repos/${{ github.repository }}/commits/{ref}/check-runs', {
-                ref: process.env.sha,
-                per_page: 50
-              });
-              for await (const cr of checkRuns) {
-                // check only last execution of the TOS workflow
-                if(cr.name == '${{ inputs.tos-workflow-name }}') {
-                  console.log('Found execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
-                  if(cr.conclusion == 'success') {
-                    return;
-                  } else {
-                    throw new Error('Found failed execution of ${{ inputs.tos-workflow-name }} at ' + cr.completed_at);
-                  }
-                }
-              }
-            }
-            throw new Error('No execution found for ${{ inputs.tos-workflow-name }}');
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up JDK 8

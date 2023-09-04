@@ -1,4 +1,7 @@
-name: PR Build Scan Upload
+name: Upload PR Build Scans
+
+env:
+  PR_BUILD_WORKFLOW_FILE_NAME: "build.yml"
 
 on:
   workflow_run:
@@ -6,48 +9,21 @@ on:
     types: [ completed ]
   issue_comment:
     types: [ created ]
-#  pull_request_target:
-#    types: [ opened,closed,synchronize ]
-
-permissions:
-  actions: write
-  contents: write
-  pull-requests: write
-  statuses: write
 
 jobs:
   init:
-    runs-on: ubuntu-latest
-    outputs:
-      BUILD_RUN_ID: ${{ steps.load-build-metadata.outputs.BUILD_RUN_ID }}
-      BUILD_SHA: ${{ steps.load-build-metadata.outputs.BUILD_SHA }}
-      BUILD_PR: ${{ steps.load-build-metadata.outputs.BUILD_PR }}
-    steps:
-      - name: Download Build Metadata
-        if: github.event_name == 'issue_comment'
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          pr: ${{ github.event.issue.number }}
-          workflow_conclusion: success
-          workflow: build-verification.yml
-          name: build-metadata-${{ github.event.issue.number }}
-      - name: Download Build Metadata
-        if: github.event_name == 'workflow_run'
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          run_id: ${{ github.event.workflow_run.id }}
-          name: build-metadata-${{ github.event.workflow_run.id }}
-      - name: Load Build Metadata
-        id: load-build-metadata
-        run: |
-          source build.properties
-          echo "BUILD_RUN_ID=$BUILD_RUN_ID" >> "$GITHUB_OUTPUT"
-          echo "BUILD_SHA=$BUILD_SHA" >> "$GITHUB_OUTPUT"
-          echo "BUILD_PR=$BUILD_PR" >> "$GITHUB_OUTPUT"
+    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-init.yml@v1
+    with:
+      build-workflow-filename: ${{ env.PR_BUILD_WORKFLOW_FILE_NAME }}
 
-  GE-TOS:
-    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-tos.yml@v1
+  check-terms-of-service:
+    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-check-tos.yml@v1
     needs: init
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+    #      statuses: write
     with:
       path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
       issue-owner: 'jprinet'
@@ -57,17 +33,15 @@ jobs:
 
 #  publish-gradle-build-scans:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
-#    needs: GE-TOS
+#    needs: check-terms-of-service
 #    with:
 #      build-run-id: ${{ needs.init.outputs.BUILD_RUN_ID }}
-#      build-sha: ${{ needs.init.outputs.BUILD_SHA }}
 #      build-pr: ${{ needs.init.outputs.BUILD_PR }}
 #    secrets: inherit
   publish-maven-build-scans:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
-    needs: GE-TOS
+    needs: check-terms-of-service
     with:
       build-run-id: ${{ needs.init.outputs.BUILD_RUN_ID }}
-      build-sha: ${{ needs.init.outputs.BUILD_SHA }}
       build-pr: ${{ needs.init.outputs.BUILD_PR }}
     secrets: inherit

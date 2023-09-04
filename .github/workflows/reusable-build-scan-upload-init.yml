@@ -1,0 +1,40 @@
+name: 'Gradle Enterprise - Init'
+
+on:
+  workflow_call:
+    inputs:
+      build-workflow-filename:
+        required: true
+        type: string
+    outputs:
+      build-pr:
+        description: "The first output string"
+        value: ${{ steps.load-build-metadata.outputs.BUILD_PR }}
+      build-run-id:
+        description: "The second output string"
+        value: ${{ steps.load-build-metadata.outputs.BUILD_RUN_ID }}
+
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Build Metadata after PR Build
+        if: github.event_name == 'workflow_run'
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          run_id: ${{ github.event.workflow_run.id }}
+          name: build-metadata-${{ github.event.workflow_run.id }}
+      - name: Download Build Metadata after PR Comment
+        if: github.event_name == 'issue_comment'
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          pr: ${{ github.event.issue.number }}
+          workflow_conclusion: success
+          workflow: ${{ inputs.build-workflow-filename }}
+          name: build-metadata-${{ github.event.issue.number }}
+      - name: Load Build Metadata
+        id: load-build-metadata
+        run: |
+          source build.properties
+          echo "BUILD_RUN_ID=$BUILD_RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "BUILD_PR=$BUILD_PR" >> "$GITHUB_OUTPUT"

@@ -3,6 +3,10 @@ name: 'Gradle Enterprise - Terms of Service approval verification'
 on:
   workflow_call:
     inputs:
+      default-branch:
+        required: true
+        type: string
+        default: 'main'
       issue-owner:
         required: true
         type: string
@@ -29,11 +33,10 @@ jobs:
         with:
           path-to-signatures: '.github/gradle-enterprise-tos.json'
           path-to-document: ${{ inputs.path-to-document }}
-          branch: main
+          branch: ${{ inputs.default-branch }}
           custom-pr-sign-comment: 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms'
-          custom-notsigned-prcomment: 'Please accept [Gradle Enterprise Terms Of Service](https://gradle.com/legal/gradle-enterprise-software-agreement/) to get your PR build scan published by commenting this PR with the following message:'
+          custom-notsigned-prcomment: 'Please accept [Gradle Enterprise Terms Of Service](${{ inputs.path-to-document }}) to get your PR build scan published by commenting this PR with the following message:'
           custom-allsigned-prcomment: 'All Contributors have accepted Gradle Enterprise Terms Of Service.'
           issue-owner: ${{ inputs.issue-owner }}
           issue-repo: ${{ inputs.issue-repo }}
           issue-number: ${{ inputs.issue-number }}
-
