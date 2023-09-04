@@ -22,28 +22,6 @@ jobs:
     if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read Gradle Enterprise Terms Of Service and I hereby accept the Terms') || github.event_name == 'workflow_run'
     runs-on: ubuntu-latest
     steps:
-      - name: override context
-        uses: actions/github-script@v6
-        env:
-          pr: ${{ steps.init-env.outputs.pr }}
-          scanlinks: ${{ steps.publish.outputs.scanlinks }}
-        with:
-          script: |
-            console.log(${{github.context}})
-            
-            Object.assign(github.context, {
-                repo: {
-                  owner: 'jprinet',
-                  repo: 'jprinet/test-gradle',
-                },
-                issue: {
-                  number: 166,
-                  owner: 'jprinet',
-                  repo: 'jprinet/test-gradle'
-                },
-            });
-
-            console.log(${{github.context}})
       - name: "Gradle Enterprise - Terms of Service approval verification"
         uses: jprinet/check-terms-of-service@v1
         env:
