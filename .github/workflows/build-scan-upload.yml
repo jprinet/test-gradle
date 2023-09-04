@@ -7,14 +7,14 @@ on:
   issue_comment:
     types: [ created ]
 
-env:
-  PR_BUILD_WORKFLOW_FILE_NAME: build.yml
+#env:
+#  PR_BUILD_WORKFLOW_FILE_NAME: build.yml
 
 jobs:
   init:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-init.yml@v1
     with:
-      build-workflow-filename: ${{ env.PR_BUILD_WORKFLOW_FILE_NAME }}
+      build-workflow-filename: "build.yml"
 
   check-terms-of-service:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-check-tos.yml@v1
