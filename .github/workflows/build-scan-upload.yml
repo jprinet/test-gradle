@@ -23,13 +23,13 @@ jobs:
       actions: write
       contents: write
       pull-requests: write
-    #      statuses: write
     with:
       path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
       issue-owner: 'jprinet'
       issue-repo: 'test-gradle'
       issue-number: ${{ needs.init.outputs.build-pr }}
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #  publish-gradle-build-scans:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
@@ -37,11 +37,13 @@ jobs:
 #    with:
 #      build-run-id: ${{ needs.init.outputs.build-run-id }}
 #      build-pr: ${{ needs.init.outputs.build-pr }}
-#    secrets: inherit
+#    secrets:
+#      GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
   publish-maven-build-scans:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
     needs: [ init, check-terms-of-service ]
     with:
       build-run-id: ${{ needs.init.outputs.build-run-id }}
       build-pr: ${{ needs.init.outputs.build-pr }}
-    secrets: inherit
+    secrets:
+      GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}

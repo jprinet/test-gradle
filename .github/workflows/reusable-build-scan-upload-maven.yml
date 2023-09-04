@@ -9,6 +9,9 @@ on:
       build-pr:
         description: "Build PR Number"
         type: string
+    secrets:
+      GRADLE_ENTERPRISE_ACCESS_KEY:
+        required: true
 
 jobs:
   build-scan-upload:
@@ -63,6 +66,8 @@ jobs:
             fi
           done
           echo "scanlinks=$scanlinks" >> $GITHUB_OUTPUT
+        env:
+          GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
       - name: Comment PR
         uses: actions/github-script@v6
         env:

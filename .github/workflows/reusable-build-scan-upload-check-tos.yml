@@ -3,9 +3,6 @@ name: 'Gradle Enterprise - Terms of Service approval verification'
 on:
   workflow_call:
     inputs:
-      default-branch:
-        type: string
-        default: 'main'
       issue-owner:
         required: true
         type: string
@@ -15,10 +12,16 @@ on:
       issue-number:
         required: true
         type: string
+      default-branch:
+        type: string
+        default: 'main'
       path-to-document:
         required: true
         type: string
         default: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
+    secrets:
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
   verify-gradle-enterprise-tos:
