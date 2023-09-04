@@ -33,14 +33,14 @@ jobs:
 
 #  publish-gradle-build-scans:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
-#    needs: check-terms-of-service
+#    needs: [ init, check-terms-of-service ]
 #    with:
 #      build-run-id: ${{ needs.init.outputs.build-run-id }}
 #      build-pr: ${{ needs.init.outputs.build-pr }}
 #    secrets: inherit
   publish-maven-build-scans:
     uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
-    needs: check-terms-of-service
+    needs: [ init, check-terms-of-service ]
     with:
       build-run-id: ${{ needs.init.outputs.build-run-id }}
       build-pr: ${{ needs.init.outputs.build-pr }}
