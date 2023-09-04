@@ -9,14 +9,17 @@ on:
     outputs:
       build-pr:
         description: "The first output string"
-        value: ${{ steps.load-build-metadata.outputs.BUILD_PR }}
+        value: ${{ jobs.init.outputs.BUILD_PR }}
       build-run-id:
         description: "The second output string"
-        value: ${{ steps.load-build-metadata.outputs.BUILD_RUN_ID }}
+        value: ${{ jobs.init.outputs.BUILD_RUN_ID }}
 
 jobs:
   init:
     runs-on: ubuntu-latest
+    outputs:
+      build-pr: ${{ steps.load-build-metadata.outputs.BUILD_PR }}
+      build-run-id: ${{ steps.load-build-metadata.outputs.BUILD_RUN_ID }}
     steps:
       - name: Download Build Metadata after PR Build
         if: github.event_name == 'workflow_run'
