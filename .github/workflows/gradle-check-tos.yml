@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Gradle Terms Of Service approval verification"
-        uses: gradle/github-action/check-tos/workflow.yml@v1
+        uses: gradle/github-actions/check-tos/workflow.yml@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
