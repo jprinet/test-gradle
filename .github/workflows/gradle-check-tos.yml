@@ -7,9 +7,6 @@ on:
 
 jobs:
   gradle-check-tos:
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Gradle Terms Of Service approval verification"
-        uses: gradle/github-actions/.github/workflows/workflow.yml@v0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#    env:
+#      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    uses: gradle/github-actions/.github/workflows/workflow.yml@v0.1
