@@ -18,4 +18,5 @@ jobs:
   gradle-check-tos:
     uses: gradle/github-actions/.github/workflows/check-tos.yml@v0.1
     with:
-      tos-location: 'https://foo.bar/tos.html'
+      tos-location: '.github/foo.html'
+#      tos-location: 'https://foo.bar/tos.html'
