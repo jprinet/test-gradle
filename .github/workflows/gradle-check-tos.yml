@@ -9,4 +9,4 @@ jobs:
   gradle-check-tos:
 #    env:
 #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    uses: gradle/github-actions/.github/workflows/check-tos/workflow.yml@v0.1
+    uses: gradle/github-actions/.github/workflows/check-tos.yml@v0.1
