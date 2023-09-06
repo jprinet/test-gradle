@@ -6,8 +6,12 @@ on:
     types: [opened,closed,synchronize]
 
 permissions:
+  # required to update signature file
   contents: write
+  # required to comment PR
   pull-requests: write
+  # required to update PR status check
+  actions: write
   statuses: write
 
 jobs:
