@@ -43,8 +43,6 @@ jobs:
         with:
           java-version: '8'
           distribution: 'temurin'
-      - name: Debug
-        run: echo "github.event.workflow_run.id = ${{ github.event.workflow_run.id }}"
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
       - name: Build with Maven 1
@@ -60,7 +58,7 @@ jobs:
     name: test-matrix
     strategy:
       matrix:
-        version: [ 42, 142, 1042 ]
+        version: [ "1.17.4", "1.17.3", "1.17.2" ]
     needs: Build
     runs-on: ubuntu-latest
     steps:
@@ -71,6 +69,11 @@ jobs:
         with:
           java-version: '8'
           distribution: 'temurin'
+      - name: Replace GE version
+        run: |
+          sed -i 's/1.18.1/${{ matrix.version}}/g' .mvn/extensions.xml
+          cat .mvn/extensions.xml
+          scanCount=$(find ./scan-maven-*/ -type f -name 'scan.scan' | wc -l)
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
       - name: Build with Maven 1
