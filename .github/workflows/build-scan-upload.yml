@@ -55,7 +55,7 @@ on:
 jobs:
 
   publish-maven-build-scans:
-    uses: gradle/github-actions/.github/workflows/publish-maven-build-scans.yml@v1
+    uses: gradle/github-actions/.github/workflows/publish-maven-build-scans.yml@v1.0
     with:
       gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
     secrets:
