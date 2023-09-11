@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   gradle-check-tos:
-    uses: gradle/github-actions/.github/workflows/check-tos.yml@v1.0
+    uses: gradle/github-actions/.github/workflows/check-tos.yml@v0.3
     with:
       tos-location: 'https://foo.bar/tos.html'
 
