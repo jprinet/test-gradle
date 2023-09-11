@@ -17,15 +17,19 @@ jobs:
       - name: Build with Maven 1
         run: mvn clean
       - name: Save Build Scan 1
-        uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
-        with:
-          build-tool: "maven"
+        uses: gradle/github-actions/maven/build-scan-save@v1
+#      - name: Save Build Scan 1
+#        uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
+#        with:
+#          build-tool: "maven"
       - name: Build with Maven 2
         run: mvn initialize
       - name: Save Build Scan 2
-        uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
-        with:
-          build-tool: "maven"
+        uses: gradle/github-actions/maven/build-scan-save@v1
+#      - name: Save Build Scan 2
+#        uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
+#        with:
+#          build-tool: "maven"
 
   build:
     name: Build
@@ -43,14 +47,14 @@ jobs:
         run: echo "github.event.workflow_run.id = ${{ github.event.workflow_run.id }}"
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Build with Gradle 1
-        run: ./gradlew help -Dscan.tag.build
+      - name: Build with Maven 1
+        run: mvn clean
       - name: Save Build Scan 1
-        uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
-      - name: Build with Gradle 2
-        run: ./gradlew tasks -Dscan.tag.build
+        uses: gradle/github-actions/maven/build-scan-save@v1
+      - name: Build with Maven 2
+        run: mvn initialize
       - name: Save Build Scan 2
-        uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
+        uses: gradle/github-actions/maven/build-scan-save@v1
 
   test-matrix:
     name: test-matrix
@@ -67,15 +71,13 @@ jobs:
         with:
           java-version: '8'
           distribution: 'temurin'
-      - name: Debug
-        run: echo "github.event.workflow_run.id = ${{ github.event.workflow_run.id }}"
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Build with Gradle 1
-        run: ./gradlew help -Dscan.tag.test -Dscan.value.version=${{ matrix.version }}
+      - name: Build with Maven 1
+        run: mvn clean
       - name: Save Build Scan 1
-        uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
-      - name: Build with Gradle 2
-        run: ./gradlew tasks -Dscan.tag.test -Dscan.tag.version=${{ matrix.version }}
+        uses: gradle/github-actions/maven/build-scan-save@v1
+      - name: Build with Maven 2
+        run: mvn initialize
       - name: Save Build Scan 2
-        uses: jprinet/test-gradle/.github/actions/build-scan-save@v1
+        uses: gradle/github-actions/maven/build-scan-save@v1

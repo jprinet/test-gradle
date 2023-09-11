@@ -4,31 +4,31 @@ on:
   workflow_run:
     workflows: [ "PR Build" ]
     types: [ completed ]
-  issue_comment:
-    types: [ created ]
+#  issue_comment:
+#    types: [ created ]
 
 #env:
 #  PR_BUILD_WORKFLOW_FILE_NAME: build.yml
 
-jobs:
-  init:
-    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-init.yml@v1
-    with:
-      build-workflow-filename: "build.yml"
-
-  check-terms-of-service:
-    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-check-tos.yml@v1
-    needs: init
-    permissions:
-      actions: write
-      contents: write
-      pull-requests: write
-    with:
-      path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
-      issue-owner: 'jprinet'
-      issue-repo: 'test-gradle'
-      issue-number: ${{ needs.init.outputs.build-pr }}
-    secrets: inherit
+#jobs:
+#  init:
+#    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-init.yml@v1
+#    with:
+#      build-workflow-filename: "build.yml"
+#
+#  check-terms-of-service:
+#    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-check-tos.yml@v1
+#    needs: init
+#    permissions:
+#      actions: write
+#      contents: write
+#      pull-requests: write
+#    with:
+#      path-to-document: 'https://gradle.com/legal/gradle-enterprise-software-agreement/'
+#      issue-owner: 'jprinet'
+#      issue-repo: 'test-gradle'
+#      issue-number: ${{ needs.init.outputs.build-pr }}
+#    secrets: inherit
 
 #  publish-gradle-build-scans:
 #    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-gradle.yml@v1
@@ -40,14 +40,23 @@ jobs:
 #      build-pr: ${{ needs.init.outputs.build-pr }}
 #    secrets:
 #      GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+#  publish-maven-build-scans:
+#    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
+#    needs: [ init, check-terms-of-service ]
+#    permissions:
+#      pull-requests: write
+#    with:
+#      build-run-id: ${{ needs.init.outputs.build-run-id }}
+#      build-pr: ${{ needs.init.outputs.build-pr }}
+#    secrets:
+#      GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+#      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+
   publish-maven-build-scans:
-    uses: jprinet/test-gradle/.github/workflows/reusable-build-scan-upload-maven.yml@v1
-    needs: [ init, check-terms-of-service ]
-    permissions:
-      pull-requests: write
+    uses: gradle/github-actions/.github/workflows/publish-maven-build-scans.yml@v1
     with:
-      build-run-id: ${{ needs.init.outputs.build-run-id }}
-      build-pr: ${{ needs.init.outputs.build-pr }}
+      gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
     secrets:
       GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
