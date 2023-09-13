@@ -15,7 +15,6 @@ jobs:
       statuses: write
     steps:
       - name: Gradle - Terms of Service approval verification
-        uses: gradle/github-actions/tos-check/run@v0.4
+        uses: gradle/github-actions/tos-check/run@v0.1
         with:
           tos-location: 'https://foo.bar/tos.html'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
