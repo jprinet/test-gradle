@@ -19,4 +19,3 @@ jobs:
         uses: gradle/github-actions/check-tos@v0.1
         with:
           tos-location: 'https://foo.bar/tos.html'
-          signature-branch: foo
