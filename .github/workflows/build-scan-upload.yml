@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Verify terms of service approval
-        uses: gradle/github-actions/pull-request-check/verify@v1.0
+        uses: gradle/github-actions/pull-request-check/verify@v0.1
         with:
           workflow-job-name: 'check-terms-of-service-approval'
 
@@ -115,7 +115,7 @@ jobs:
     steps:
       - name: Load Gradle Enterprise extension versions to publish Build Scans for
         id: load
-        uses: gradle/github-actions/maven/build-scan/load-metadata@v1.0
+        uses: gradle/github-actions/maven/build-scan/load-metadata@v0.1
 
   publish-build-scan:
     runs-on: ubuntu-latest
@@ -125,7 +125,7 @@ jobs:
         version: ${{ fromJson(needs.load-metadata.outputs.extension-versions) }}
     steps:
       - name: Publish Maven Build Scans
-        uses: gradle/github-actions/maven/build-scan/publish@v1.0
+        uses: gradle/github-actions/maven/build-scan/publish@v0.1
         with:
           gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
           gradle-enterprise-extension-version: ${{ matrix.version }}
