@@ -6,7 +6,7 @@ on:
   pull_request_target:
 
 jobs:
-  gradle-check-tos:
+  check-terms-of-service-approval:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,6 +16,6 @@ jobs:
     steps:
       - name: Gradle - Terms of Service approval verification
         #uses: gradle/github-actions/tos-check/run@v0.1
-        uses: gradle/github-actions/check-tos@v0.1
+        uses: gradle/github-actions/terms-of-service/verify@v0.1
         with:
           tos-location: 'https://foo.bar/tos.html'
