@@ -130,3 +130,4 @@ jobs:
           gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
           gradle-enterprise-extension-version: ${{ matrix.version }}
           gradle-enterprise-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+          pull-request-number: ${{ steps.load.outputs.pull-request-number }}
