@@ -112,6 +112,7 @@ jobs:
     needs: verify-terms-of-service-approval
     outputs:
       extension-versions: ${{ steps.load.outputs.extension-versions }}
+      pull-request-number: ${{ steps.load.outputs.pull-request-number }}
     steps:
       - name: Load Gradle Enterprise extension versions to publish Build Scans for
         id: load
@@ -130,4 +131,4 @@ jobs:
           gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
           gradle-enterprise-extension-version: ${{ matrix.version }}
           gradle-enterprise-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-          pull-request-number: ${{ steps.load.outputs.pull-request-number }}
+          pull-request-number: ${{ needs.load-metadata.outputs.pull-request-number }}
