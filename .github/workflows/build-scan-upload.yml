@@ -121,6 +121,8 @@ jobs:
   publish-build-scan:
     runs-on: ubuntu-latest
     needs: load-metadata
+    permissions:
+      pull-requests: write
     strategy:
       matrix:
         version: ${{ fromJson(needs.load-metadata.outputs.extension-versions) }}
