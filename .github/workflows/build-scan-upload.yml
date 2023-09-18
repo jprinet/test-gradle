@@ -139,11 +139,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Verify Terms of Service acceptance job passed
-        uses: gradle/github-actions/terms-of-service-acceptance/verify@v1.0
+        uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.1
         with:
           terms-of-service-acceptance-workflow-job-name: 'check-terms-of-service-acceptance'
       - name: Publish Maven Build Scans
-        uses: gradle/github-actions/maven/build-scan/publish@v1.0
+        uses: gradle/github-actions/maven/build-scan/publish@v0.1
         with:
           gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
           gradle-enterprise-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
