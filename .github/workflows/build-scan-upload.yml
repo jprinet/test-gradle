@@ -137,6 +137,8 @@ jobs:
 
   publish-build-scans:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: Verify Terms of Service acceptance job passed
         uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.2
