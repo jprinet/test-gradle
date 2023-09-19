@@ -139,7 +139,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Verify Terms of Service acceptance job passed
-        uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.1
+        uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.2
         with:
           terms-of-service-acceptance-workflow-job-name: 'check-terms-of-service-acceptance'
       - name: Publish Maven Build Scans
