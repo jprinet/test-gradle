@@ -147,3 +147,4 @@ jobs:
         with:
           gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
           gradle-enterprise-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
