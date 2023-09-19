@@ -143,7 +143,7 @@ jobs:
         with:
           terms-of-service-acceptance-workflow-job-name: 'check-terms-of-service-acceptance'
       - name: Publish Maven Build Scans
-        uses: gradle/github-actions/maven/build-scan/publish@v0.1
+        uses: gradle/github-actions/maven/build-scan/publish@v0.2
         with:
           gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
           gradle-enterprise-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
