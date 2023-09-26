@@ -17,11 +17,11 @@ jobs:
       - name: Build with Maven 1
         run: mvn clean
       - name: Save Build Scan 1
-        uses: gradle/github-actions/maven/build-scan/save@v0.2
+        uses: gradle/github-actions/maven-build-scan/save@v0.2
       - name: Build with Maven 2
         run: mvn initialize
       - name: Save Build Scan 2
-        uses: gradle/github-actions/maven/build-scan/save@v0.2
+        uses: gradle/github-actions/maven-build-scan/save@v0.2
 
   build:
     name: Build
@@ -38,11 +38,11 @@ jobs:
       - name: Build with Maven 1
         run: mvn clean
       - name: Save Build Scan 1
-        uses: gradle/github-actions/maven/build-scan/save@v0.2
+        uses: gradle/github-actions/maven-build-scan/save@v0.2
       - name: Build with Maven 2
         run: mvn initialize
       - name: Save Build Scan 2
-        uses: gradle/github-actions/maven/build-scan/save@v0.2
+        uses: gradle/github-actions/maven-build-scan/save@v0.2
 
   test-matrix:
     name: test-matrix
@@ -67,8 +67,8 @@ jobs:
       - name: Build with Maven 1
         run: mvn clean
       - name: Save Build Scan 1
-        uses: gradle/github-actions/maven/build-scan/save@v0.2
+        uses: gradle/github-actions/maven-build-scan/save@v0.2
       - name: Build with Maven 2
         run: mvn initialize
       - name: Save Build Scan 2
-        uses: gradle/github-actions/maven/build-scan/save@v0.2
+        uses: gradle/github-actions/maven-build-scan/save@v0.2
