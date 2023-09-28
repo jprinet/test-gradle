@@ -135,6 +135,22 @@ jobs:
 #          gradle-enterprise-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
 #          pull-request-number: ${{ needs.load-metadata.outputs.pull-request-number }}
 
+  run-terms-of-service-acceptance:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+      statuses: write
+    steps:
+      - name: Gradle - Terms of Service approval verification
+        uses: gradle/github-actions/terms-of-service-acceptance/run@v0.9
+        with:
+          tos-location: 'https://foo.bar/tos.html'
+          pr-owner: 'jprinet'
+          pr-repo: 'test-gradle'
+          pr-number: ${{ needs.init.outputs.build-pr }}
+
   publish-build-scans:
     runs-on: ubuntu-latest
     permissions:
