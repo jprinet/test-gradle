@@ -143,20 +143,27 @@ jobs:
 #      actions: write
 #      statuses: write
     steps:
-      - name: Load data
-        id: load
-        uses: gradle/github-actions/maven-build-scan/load@v0.9
+      - name: Publish Build Scan
+        uses: gradle/github-actions/maven-build-scan@v0.1
         with:
-          build-workflow-filename: "build.yml"
-      - name: Verify Terms of Service acceptance
-        uses: gradle/github-actions/terms-of-service-acceptance/run@v0.9
-        with:
+          build-workflow-filename: 'build.yml'
           tos-location: 'https://foo.bar/tos.html'
-          pr-number: ${{ steps.load.outputs.pr-number }}
-      - name: Publish Maven Build Scans
-        uses: gradle/github-actions/maven-build-scan/publish@v0.9
-        with:
-          develocity-url: 'https://ge.solutions-team.gradle.com'
-          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-          pr-number: ${{ steps.load.outputs.pr-number }}
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
+          develocity-url: 'https://<MY_DEVELOCITY_URL>'
+          develocity-access-key: ${{ secrets.<DEVELOCITY_ACCESS_KEY> }}
+
+#      - name: Load data
+#        id: load
+#        uses: gradle/github-actions/maven-build-scan/load@v0.9
+#        with:
+#          build-workflow-filename: 'build.yml'
+#      - name: Verify Terms of Service acceptance
+#        uses: gradle/github-actions/terms-of-service-acceptance/run@v0.9
+#        with:
+#          tos-location: 'https://foo.bar/tos.html'
+#          pr-number: ${{ steps.load.outputs.pr-number }}
+#      - name: Publish Maven Build Scans
+#        uses: gradle/github-actions/maven-build-scan/publish@v0.9
+#        with:
+#          develocity-url: 'https://ge.solutions-team.gradle.com'
+#          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+#          pr-number: ${{ steps.load.outputs.pr-number }}
