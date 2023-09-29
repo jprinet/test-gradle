@@ -1,4 +1,12 @@
 {
   "signedContributors": [
+    {
+      "name": "jprinet",
+      "id": 10243934,
+      "comment_id": 1740520032,
+      "created_at": "2023-09-29T08:37:47Z",
+      "repoId": 674311950,
+      "pullRequestNo": 268
+    }
   ]
 }
