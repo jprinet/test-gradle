@@ -141,8 +141,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      actions: write
-      statuses: write
+#      actions: write
+#      statuses: write
     steps:
       - name: Load data
         id: load
