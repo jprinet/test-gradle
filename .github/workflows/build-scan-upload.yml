@@ -155,7 +155,7 @@ jobs:
           tos-location: 'https://foo.bar/tos.html'
           pr-number: ${{ steps.load.outputs.pr-number }}
       - name: Publish Maven Build Scans
-        uses: gradle/github-actions/maven-build-scan/publish@v1.0
+        uses: gradle/github-actions/maven-build-scan/publish@v0.9
         with:
           develocity-url: 'https://ge.solutions-team.gradle.com'
           develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
