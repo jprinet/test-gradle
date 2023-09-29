@@ -14,7 +14,11 @@ jobs:
       actions: write
       statuses: write
     steps:
-      - name: Gradle - Terms of Service approval verification
-        uses: gradle/github-actions/terms-of-service-acceptance/run@v0.9
-        with:
-          tos-location: 'https://foo.bar/tos.html'
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+#      - name: Gradle - Terms of Service approval verification
+#        uses: gradle/github-actions/terms-of-service-acceptance/run@v0.9
+#        with:
+#          tos-location: 'https://foo.bar/tos.html'
