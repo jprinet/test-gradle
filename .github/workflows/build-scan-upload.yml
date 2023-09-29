@@ -149,7 +149,7 @@ jobs:
         uses: gradle/github-actions/maven-build-scan/load@v0.9
         with:
           build-workflow-filename: "build.yml"
-      - name: Verify Terms of Service acceptance job passed
+      - name: Verify Terms of Service acceptance
         uses: gradle/github-actions/terms-of-service-acceptance/run@v0.9
         with:
           tos-location: 'https://foo.bar/tos.html'
