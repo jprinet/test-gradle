@@ -149,4 +149,4 @@ jobs:
           build-workflow-filename: 'build.yml'
           tos-location: 'https://foo.bar/tos.html'
           develocity-url: 'https://ge.solutions-team.gradle.com'
-          develocity-access-key: ${{ secrets.<DEVELOCITY_ACCESS_KEY> }}
+          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
