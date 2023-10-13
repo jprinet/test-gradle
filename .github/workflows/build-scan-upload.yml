@@ -4,8 +4,8 @@ on:
   workflow_run:
     workflows: [ "PR Build" ]
     types: [ completed ]
-  issue_comment:
-    types: [ created ]
+#  issue_comment:
+#    types: [ created ]
 
 #env:
 #  PR_BUILD_WORKFLOW_FILE_NAME: build.yml
@@ -135,18 +135,31 @@ jobs:
 #          gradle-enterprise-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
 #          pull-request-number: ${{ needs.load-metadata.outputs.pull-request-number }}
 
+#  publish-build-scans:
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: write
+#      pull-requests: write
+#    steps:
+#      - name: Publish Build Scan
+#        uses: gradle/github-actions/maven-build-scan@v0.1
+#        with:
+#          build-workflow-filename: 'build.yml'
+#          tos-location: 'https://foo.bar/tos.html'
+#          develocity-url: 'https://ge.solutions-team.gradle.com'
+#          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+
   publish-build-scans:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       pull-requests: write
-#      actions: write
-#      statuses: write
     steps:
-      - name: Publish Build Scan
-        uses: gradle/github-actions/maven-build-scan@v0.1
+      - name: Verify Terms of Service acceptance job passed
+        uses: gradle/github-actions/terms-of-service-acceptance/verify@v1.0
         with:
-          build-workflow-filename: 'build.yml'
-          tos-location: 'https://foo.bar/tos.html'
+          terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
+      - name: Publish Maven Build Scans
+        uses: gradle/github-actions/maven-build-scan/publish@v1.0
+        with:
           develocity-url: 'https://ge.solutions-team.gradle.com'
           develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
