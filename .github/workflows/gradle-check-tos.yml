@@ -15,11 +15,11 @@ jobs:
       statuses: write
     steps:
       - name: Gradle - Save
-        uses: gradle/github-actions/save@v0.1ts
+        uses: gradle/github-actions/save@v0.1-ts
         with:
           milliseconds: '42'
       - name: Gradle - Publish
-        uses: gradle/github-actions/publish@v0.1ts
+        uses: gradle/github-actions/publish@v0.1-ts
         with:
           milliseconds: '43'
       - name: Dump GitHub context
