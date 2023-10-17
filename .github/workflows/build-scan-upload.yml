@@ -154,6 +154,10 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - name: Publish Build Scan
+        uses: gradle/github-actions/publish@v0.1-ts
+        with:
+          terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
       - name: Verify Terms of Service acceptance job passed
         uses: gradle/github-actions/terms-of-service-acceptance/verify@v1.0
         with:
