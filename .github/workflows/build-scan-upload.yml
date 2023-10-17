@@ -157,7 +157,10 @@ jobs:
       - name: Publish Build Scan
         uses: gradle/github-actions/publish@v0.1-ts
         with:
-          terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
+          build-workflow-filename: 'build.yml'
+          tos-location: 'https://foo.bar/tos.html'
+          develocity-url: 'https://ge.solutions-team.gradle.com'
+          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
       - name: Verify Terms of Service acceptance job passed
         uses: gradle/github-actions/terms-of-service-acceptance/verify@v1.0
         with:
