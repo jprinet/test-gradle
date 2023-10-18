@@ -14,19 +14,15 @@ jobs:
       actions: write
       statuses: write
     steps:
-      - name: Gradle - Save
-        uses: gradle/github-actions/save@v0.1-ts
-        with:
-          milliseconds: '42'
       - name: Gradle - Publish
         uses: gradle/github-actions/publish@v0.1-ts
         with:
           milliseconds: '43'
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Gradle - Terms of Service approval verification
-        uses: gradle/github-actions/terms-of-service-acceptance/run@v1.0
-        with:
-          tos-location: 'https://foo.bar/tos.html'
+#      - name: Dump GitHub context
+#        env:
+#          GITHUB_CONTEXT: ${{ toJson(github) }}
+#        run: echo "$GITHUB_CONTEXT"
+#      - name: Gradle - Terms of Service approval verification
+#        uses: gradle/github-actions/terms-of-service-acceptance/run@v1.0
+#        with:
+#          tos-location: 'https://foo.bar/tos.html'
