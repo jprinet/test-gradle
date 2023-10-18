@@ -161,12 +161,12 @@ jobs:
           tos-location: 'https://foo.bar/tos.html'
           develocity-url: 'https://ge.solutions-team.gradle.com'
           develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-      - name: Verify Terms of Service acceptance job passed
-        uses: gradle/github-actions/terms-of-service-acceptance/verify@v1.0
-        with:
-          terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
-      - name: Publish Maven Build Scans
-        uses: gradle/github-actions/maven-build-scan/publish@v1.0
-        with:
-          develocity-url: 'https://ge.solutions-team.gradle.com'
-          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+#      - name: Verify Terms of Service acceptance job passed
+#        uses: gradle/github-actions/terms-of-service-acceptance/verify@v1-beta
+#        with:
+#          terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
+#      - name: Publish Maven Build Scans
+#        uses: gradle/github-actions/maven-build-scan/publish@v1-beta
+#        with:
+#          develocity-url: 'https://ge.solutions-team.gradle.com'
+#          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
