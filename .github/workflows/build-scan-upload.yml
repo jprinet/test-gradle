@@ -154,6 +154,7 @@ jobs:
     permissions:
       pull-requests: write
       contents: write
+      actions: write
     steps:
       - name: Publish Build Scan
         uses: gradle/github-actions/publish@v0.1-ts
