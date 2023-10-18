@@ -153,6 +153,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+      contents: write
     steps:
       - name: Publish Build Scan
         uses: gradle/github-actions/publish@v0.1-ts
