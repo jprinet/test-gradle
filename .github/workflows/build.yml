@@ -17,13 +17,9 @@ jobs:
       - name: Build with Maven 1
         run: mvn clean
       - name: Save Build Scan 1
-        uses: gradle/github-actions/save@v0.1-ts
-      - name: Save Build Scan 1
-        uses: gradle/github-actions/maven-build-scan/save@v1-beta
+        uses: gradle/github-actions-save@v0.1-ts
       - name: Build with Maven 2
         run: mvn initialize
       - name: Save Build Scan 2
-        uses: gradle/github-actions/save@v0.1-ts
-      - name: Save Build Scan 2
-        uses: gradle/github-actions/maven-build-scan/save@v1-beta
+        uses: gradle/github-actions-save@v0.1-ts
 
