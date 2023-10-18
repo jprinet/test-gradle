@@ -163,7 +163,7 @@ jobs:
           tos-location: 'https://foo.bar/tos.html'
           develocity-url: 'https://ge.solutions-team.gradle.com'
           develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-          white-list: jprinet-jfrog,foo,bar
+#          white-list: jprinet-jfrog,foo,bar
 #      - name: Verify Terms of Service acceptance job passed
 #        uses: gradle/github-actions/terms-of-service-acceptance/verify@v1-beta
 #        with:
