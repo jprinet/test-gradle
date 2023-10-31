@@ -23,4 +23,4 @@ jobs:
         with:
           tos-location: 'https://foo.bar/tos.html'
           white-list: foo,jprinet,bar
-          white-list-only: true
+#          white-list-only: true
