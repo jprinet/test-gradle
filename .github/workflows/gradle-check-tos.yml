@@ -22,5 +22,5 @@ jobs:
         uses: gradle/github-actions/terms-of-service-acceptance/run@v0.2
         with:
           tos-location: 'https://foo.bar/tos.html'
-          white-list: foo,jprinet,bar,jprinet-jfrog
+          white-list: foo,jprinet,bar,jprinet-jfrog-foo
           white-list-only: true
