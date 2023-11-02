@@ -1,4 +1,4 @@
-name: Upload PR Build Scans
+name: Upload PR Build Scans - LEGACY
 
 on:
   workflow_run:
