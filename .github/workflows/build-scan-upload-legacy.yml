@@ -1,4 +1,4 @@
-name: Upload PR Build Scans
+name: Upload PR Build Scans - LEGACY
 
 on:
   workflow_run:
@@ -14,9 +14,6 @@ jobs:
     needs: load-metadata
     permissions:
       pull-requests: write
-    strategy:
-      matrix:
-        version: ${{ fromJson(needs.load-metadata.outputs.extension-versions) }}
     steps:
       - name: Verify terms of service approval
         uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.2
