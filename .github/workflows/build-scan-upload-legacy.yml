@@ -25,7 +25,6 @@ jobs:
       - name: Publish Maven Build Scans
         uses: gradle/github-actions/maven-build-scan/publish@v0.2
         with:
-          gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
-          gradle-enterprise-extension-version: ${{ matrix.version }}
-          gradle-enterprise-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-          pull-request-number: ${{ needs.load-metadata.outputs.pull-request-number }}
+          develocity-url: 'https://ge.solutions-team.gradle.com'
+          develocity-extension-version: ${{ matrix.version }}
+          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
