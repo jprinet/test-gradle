@@ -26,5 +26,5 @@ jobs:
         uses: gradle/github-actions/maven-build-scan/publish@v0.2
         with:
           develocity-url: 'https://ge.solutions-team.gradle.com'
-          develocity-extension-version: ${{ matrix.version }}
           develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+          skip-comment: 'true'
