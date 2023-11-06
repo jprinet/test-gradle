@@ -18,10 +18,10 @@ jobs:
         uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.2
         with:
           terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
-      - name: Debug step
-        run: |
-          echo "validated"
-          exit 1
+#      - name: Debug step
+#        run: |
+#          echo "validated"
+#          exit 1
       - name: Publish Maven Build Scans
         uses: gradle/github-actions/maven-build-scan/publish@v0.2
         with:
