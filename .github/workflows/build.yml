@@ -26,6 +26,7 @@ jobs:
 
   build:
     name: Build
+    if: ${{ always() && !cancelled() }}
     needs: Init
     runs-on: ubuntu-latest
     steps:
@@ -48,6 +49,7 @@ jobs:
 
   test-matrix:
     name: test-matrix
+    if: ${{ always() && !cancelled() }}
     strategy:
       matrix:
         version: [ "1.17.4", "1.17.3", "1.17.2" ]
