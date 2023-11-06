@@ -17,7 +17,6 @@ jobs:
       - name: Verify terms of service approval
         uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.2
         with:
-          workflow-job-name: 'run-terms-of-service-approval'
           terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
       - name: Debug step
         run: |
