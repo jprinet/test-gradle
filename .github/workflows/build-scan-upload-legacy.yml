@@ -27,4 +27,4 @@ jobs:
         with:
           develocity-url: 'https://ge.solutions-team.gradle.com'
           develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-          skip-comment: 'false'
+          skip-comment: 'true'
