@@ -17,16 +17,14 @@ jobs:
       - name: Verify terms of service approval
         uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.2
         with:
-          workflow-job-name: 'run-terms-of-service-approval'
           terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
-      - name: Debug step
-        run: |
-          echo "validated"
-          exit 1
+#      - name: Debug step
+#        run: |
+#          echo "validated"
+#          exit 1
       - name: Publish Maven Build Scans
         uses: gradle/github-actions/maven-build-scan/publish@v0.2
         with:
-          gradle-enterprise-url: 'https://ge.solutions-team.gradle.com'
-          gradle-enterprise-extension-version: ${{ matrix.version }}
-          gradle-enterprise-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
-          pull-request-number: ${{ needs.load-metadata.outputs.pull-request-number }}
+          develocity-url: 'https://ge.solutions-team.gradle.com'
+          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+          skip-comment: 'false'
