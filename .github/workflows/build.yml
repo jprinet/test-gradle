@@ -18,11 +18,15 @@ jobs:
         run: mvn clean
       - name: Save Build Scan 1
         uses: gradle/github-actions/maven-build-scan/save@v0.2
+        with:
+          job-name: "foo bar baz"
       - name: Build with Maven 2
         run: mvn foo
       - name: Save Build Scan 2
         uses: gradle/github-actions/maven-build-scan/save@v0.2
         if: always()
+        with:
+          job-name: "foo2 bar2 baz2"
 
   build:
     name: Build
