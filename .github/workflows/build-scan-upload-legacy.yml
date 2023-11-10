@@ -14,10 +14,10 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Verify terms of service approval
-        uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.2
-        with:
-          terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
+#      - name: Verify terms of service approval
+#        uses: gradle/github-actions/terms-of-service-acceptance/verify@v0.2
+#        with:
+#          terms-of-service-acceptance-workflow-job-name: 'run-terms-of-service-acceptance'
 #      - name: Debug step
 #        run: |
 #          echo "validated"
