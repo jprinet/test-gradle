@@ -22,6 +22,9 @@ jobs:
 #        run: |
 #          echo "validated"
 #          exit 1
+      - name: Debug
+        run: |
+          ls -ltR
       - name: Publish Maven Build Scans
         uses: gradle/github-actions/maven-build-scan/publish@v0.2
         with:
