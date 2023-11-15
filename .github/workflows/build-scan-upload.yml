@@ -16,6 +16,9 @@ jobs:
       contents: write
       actions: write
     steps:
+      - name: Debug
+        run: |
+          ls -ltR
       - name: Publish Build Scan
         uses: gradle/github-actions/maven-build-scan-publish@v0.1-ts
         with:
