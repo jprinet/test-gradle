@@ -36,6 +36,8 @@ jobs:
           distribution: 'temurin'
       - name: Debug
         run: |
+          cat /home/runner/.m2/settings.xml
+          echo "$(mvn --version | grep -i "MAVEN HOME" | awk -F': ' '{print $NF}')"
           echo $(dirname $(which mvn))
           pwd
           echo $M2_HOME
