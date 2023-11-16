@@ -32,6 +32,7 @@ jobs:
       - name: Debug
         run: |
           pwd
+          mvn -version
           set
           ls -ltR ../..
       - name: Save Build Scan 1
