@@ -44,6 +44,9 @@ jobs:
         run: mvn clean
       - name: Build with Maven 2
         run: mvn foo
+      - name: Debug
+        run: |
+          ls -ltR ~/.m2/.gradle-enterprise/build-scan-data/
 
   test-matrix:
     name: test-matrix
