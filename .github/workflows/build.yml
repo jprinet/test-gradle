@@ -36,6 +36,7 @@ jobs:
           distribution: 'temurin'
       - name: Debug
         run: |
+          echo $(dirname $(which mvn))
           pwd
           echo $M2_HOME
           mvn -version
