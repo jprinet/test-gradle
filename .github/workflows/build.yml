@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Debug
+        run: |
+          ls -ltR
       - name: Save Build Scan 1
         uses: gradle/github-actions/maven-build-scan-save@v0.1-ts
       - name: Set up JDK 8
