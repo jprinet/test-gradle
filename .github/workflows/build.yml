@@ -32,6 +32,7 @@ jobs:
       - name: Debug
         run: |
           pwd
+          echo $M2_HOME
           mvn -version
           set
           ls -ltR ../..
