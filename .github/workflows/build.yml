@@ -40,7 +40,7 @@ jobs:
         run: |
           mvn -version
       - name: Build with Maven 1
-        run: mvn clean
+        run: mvn clean package
       - name: Debug
         if: always()
         run: |
