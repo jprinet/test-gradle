@@ -42,6 +42,10 @@ jobs:
           mvn -version
       - name: Build with Maven 1
         run: mvn clean
+      - name: Debug
+        if: always()
+        run: |
+          ls -ltR ./build-scan-data
       - name: Build with Maven 2
         run: mvn foo
       - name: Debug
