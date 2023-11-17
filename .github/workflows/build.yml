@@ -38,16 +38,23 @@ jobs:
         uses: gradle/github-actions/maven-build-scan-save@v0.1-ts
       - name: Debug
         run: |
-          ls -ltR /usr/share/apache-maven-3.8.8/
           mvn -version
       - name: Build with Maven 1
         run: mvn clean
       - name: Debug
         if: always()
         run: |
+          ls -ltR ~/.m2/.gradle-enterprise/build-scan-data/
+      - name: Debug
+        if: always()
+        run: |
           ls -ltR ./build-scan-data
       - name: Build with Maven 2
         run: mvn foo
+      - name: Debug
+        if: always()
+        run: |
+          ls -ltR ~/.m2/.gradle-enterprise/build-scan-data/
       - name: Debug
         if: always()
         run: |
