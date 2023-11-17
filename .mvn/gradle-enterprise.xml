@@ -13,6 +13,7 @@
         </capture>
         <backgroundBuildScanUpload>#{isFalse(env['GITHUB_ACTIONS'])}</backgroundBuildScanUpload>
         <publish>ALWAYS</publish>
+        <backgroundBuildScanUpload>false</backgroundBuildScanUpload>
 <!--        <publishIfAuthenticated>true</publishIfAuthenticated>-->
         <obfuscation>
             <ipAddresses>#{{'0.0.0.0'}}</ipAddresses>
