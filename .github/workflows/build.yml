@@ -45,6 +45,7 @@ jobs:
       - name: Build with Maven 2
         run: mvn foo
       - name: Debug
+        if: always()
         run: |
           ls -ltR ~/.m2/.gradle-enterprise/build-scan-data/
 
