@@ -11,6 +11,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Debug
         run: ls -ltR / 2>/dev/null
+        shell: bash
       - name: Setup Maven Build Scan Capture
         uses: gradle/github-actions/maven-build-scan-save@v0.1-ts
       - name: Set up JDK 8
