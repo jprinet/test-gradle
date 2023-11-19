@@ -15,8 +15,6 @@ jobs:
         shell: bash
       - name: Setup Maven Build Scan Capture
         uses: gradle/github-actions/maven-build-scan-save@v0.1-ts
-        with:
-          maven-lib-ext-search-patterns: 'C:/ProgramData/chocolatey/lib/maven/apache-maven-*/lib/ext/'
       - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
