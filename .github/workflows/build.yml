@@ -17,6 +17,7 @@ jobs:
         uses: gradle/github-actions/maven-build-scan-capture@v0.1-ts
         with:
           build-scan-capture-strategy: ON_DEMAND
+          MAVEN_HOME: C:/ProgramData/chocolatey/lib/maven/apache-maven-*
       - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
@@ -48,6 +49,7 @@ jobs:
         uses: gradle/github-actions/maven-build-scan-capture@v0.1-ts
         with:
           build-scan-capture-strategy: ON_FAILURE
+          MAVEN_HOME: /usr/share/apache-maven-*
       - name: Debug
         run: |
           mvn -version
