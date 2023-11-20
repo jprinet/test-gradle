@@ -16,7 +16,7 @@ jobs:
       - name: Setup Maven Build Scan Capture
         uses: gradle/github-actions/maven-build-scan-capture@v0.1-ts
         with:
-          build-scan-capture-strategy: ON_FAILURE
+          build-scan-capture-strategy: ON_DEMAND
       - name: Set up JDK 8
         uses: actions/setup-java@v3
         with:
