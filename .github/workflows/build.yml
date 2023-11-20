@@ -24,8 +24,12 @@ jobs:
           distribution: 'temurin'
       - name: Build with Maven 1
         run: mvn clean
+        env:
+          CAPTURE_BUILD_SCAN: true
       - name: Build with Maven 2
         run: mvn foo
+        env:
+          CAPTURE_BUILD_SCAN: false
 
   build:
     name: Build
