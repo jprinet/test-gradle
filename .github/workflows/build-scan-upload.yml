@@ -24,6 +24,6 @@ jobs:
           develocity-url: 'https://ge.solutions-team.gradle.com'
           develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
           skip-comment: false
-          authorized-user: 'foo,bar'
+          authorized-list: 'foo,bar'
       - name: Debug
         run: cat $HOME/build-metadata.json
