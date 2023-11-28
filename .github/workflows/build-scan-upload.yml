@@ -25,5 +25,3 @@ jobs:
           develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
           skip-comment: false
           authorized-list: ''
-      - name: Debug
-        run: cat $HOME/build-metadata.json
