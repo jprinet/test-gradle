@@ -25,3 +25,4 @@ jobs:
           develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
           skip-comment: false
           authorized-list: ''
+          workflow-summary-enabled: true
