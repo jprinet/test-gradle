@@ -10,7 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup build scan capture
-        uses: gradle/github-actions/maven-build-scan-capture@v0.1-ts
+        uses: gradle/github-actions/maven-build-scan-setup@v0.2
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -29,7 +29,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup build scan capture
-        uses: gradle/github-actions/maven-build-scan-capture@v0.1-ts
+        uses: gradle/github-actions/maven-build-scan-setup@v0.2
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -51,7 +51,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup build scan capture
-        uses: gradle/github-actions/maven-build-scan-capture@v0.1-ts
+        uses: gradle/github-actions/maven-build-scan-setup@v0.2
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
