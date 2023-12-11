@@ -9,10 +9,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Init wrapper
-        run: ./mvnw clean -X
       - name: Setup build scan capture
         uses: gradle/github-actions/maven-build-scan-setup@v0.2.1
+        with:
+          wrapper-init: true
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -32,8 +32,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup build scan capture
         uses: gradle/github-actions/maven-build-scan-setup@v0.2.1
-        env:
-          MAVEN_HOME: /home/runner/.m2/wrapper/dists/apache-maven-3.8.6-bin/67568434/apache-maven-3.8.6
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
