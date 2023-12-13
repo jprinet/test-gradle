@@ -27,4 +27,4 @@ jobs:
           authorized-list: ''
           workflow-summary-enabled: true
       - name: Debug
-        run: cat $HOME/build-metadata.json
+        run: cat /home/runner/work/_temp/maven-build-scan-data/build-metadata.json
