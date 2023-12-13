@@ -18,9 +18,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Build with Maven 1
-        run: ./mvnw clean -X
+        run: ./mvnw clean
       - name: Build with Maven 2
-        run: ./mvnw foo -X
+        run: ./mvnw foo
 
   build:
     name: Build
