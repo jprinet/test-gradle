@@ -17,6 +17,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Debug
+        run: env
       - name: Build with Maven 1
         run: ./mvnw clean -X
       - name: Build with Maven 2
