@@ -1,6 +1,6 @@
-name: PR Build - LEGACY
+name: PR Build - Maven
 
-on: workflow_dispatch
+on: [ pull_request ]
 
 jobs:
   init:
@@ -9,20 +9,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set up JDK 8
-        uses: actions/setup-java@v3
+      - name: Setup build scan capture
+        uses: gradle/github-actions/build-scan-setup-maven@v0.3
         with:
-          java-version: '8'
+          wrapper-init: true
+      - uses: actions/setup-java@v3
+        with:
           distribution: 'temurin'
+          java-version: '17'
       - name: Build with Maven 1
-        run: mvn clean
-      - name: Save Build Scan 1
-        uses: gradle/github-actions/maven-build-scan/save@v0.2
+        run: ./mvnw clean
       - name: Build with Maven 2
-        run: mvn foo
-      - name: Save Build Scan 2
-        uses: gradle/github-actions/maven-build-scan/save@v0.2
-        if: always()
+        run: ./mvnw foo
 
   build:
     name: Build
@@ -32,20 +30,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set up JDK 8
-        uses: actions/setup-java@v3
+      - name: Setup build scan capture
+        uses: gradle/github-actions/build-scan-setup-maven@v0.3
         with:
-          java-version: '8'
+          wrapper-init: true
+      - uses: actions/setup-java@v3
+        with:
           distribution: 'temurin'
+          java-version: '17'
       - name: Build with Maven 1
-        run: mvn clean
-      - name: Save Build Scan 1
-        uses: gradle/github-actions/maven-build-scan/save@v0.2
+        run: ./mvnw clean
       - name: Build with Maven 2
-        run: mvn foo
-      - name: Save Build Scan 2
-        uses: gradle/github-actions/maven-build-scan/save@v0.2
-        if: always()
+        run: ./mvnw foo
 
   test-matrix:
     name: test-matrix
@@ -58,10 +54,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set up JDK 8
+      - name: Setup build scan capture
+        uses: gradle/github-actions/build-scan-setup-maven@v0.3
+      - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
-          java-version: '8'
+          java-version: '11'
           distribution: 'temurin'
       - name: Replace GE version
         run: |
@@ -70,10 +68,5 @@ jobs:
           scanCount=$(find ./scan-maven-*/ -type f -name 'scan.scan' | wc -l)
       - name: Build with Maven 1
         run: mvn clean
-      - name: Save Build Scan 1
-        uses: gradle/github-actions/maven-build-scan/save@v0.2
       - name: Build with Maven 2
         run: mvn foo
-      - name: Save Build Scan 2
-        uses: gradle/github-actions/maven-build-scan/save@v0.2
-        if: always()

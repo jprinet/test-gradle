@@ -1,0 +1,30 @@
+name: Upload PR Build Scans - Maven
+
+on:
+  workflow_run:
+    workflows: [ "PR Build - Maven" ]
+    types: [ completed ]
+  issue_comment:
+    types: [ created ]
+
+jobs:
+
+  publish-build-scans:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+      actions: write
+    steps:
+      - name: Setup Maven Build Scan Capture
+        uses: gradle/github-actions/build-scan-setup-maven@v0.3
+      - name: Publish Build Scan
+        uses: gradle/github-actions/build-scan-publish-maven@v0.3
+        with:
+          develocity-url: 'https://ge.solutions-team.gradle.com'
+          develocity-access-key: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
+          skip-comment: false
+          authorized-list: ''
+      - name: Debug
+        run: |
+          if [ -f /home/runner/work/_temp/maven-build-scan-data/build-metadata.json ]; then jq '.' /home/runner/work/_temp/maven-build-scan-data/build-metadata.json >> $GITHUB_STEP_SUMMARY; fi

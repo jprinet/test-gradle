@@ -2,7 +2,7 @@ name: Upload PR Build Scans - LEGACY
 
 on:
   workflow_run:
-    workflows: [ "PR Build" ]
+    workflows: [ "PR Build - LEGACY" ]
     types: [ completed ]
   issue_comment:
     types: [ created ]
