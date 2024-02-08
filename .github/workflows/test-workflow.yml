@@ -1,0 +1,13 @@
+name: Test Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Experiment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download latest version of the validation scripts
+        uses: jprinet/test-actions/.github/actions/gradle/download@v0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
