@@ -2,7 +2,11 @@ name: PR Build - Maven
 
 on: [ pull_request ]
 
+permissions:
+  pull-requests: write
+
 jobs:
+
   init:
     name: Init
     runs-on: windows-latest
