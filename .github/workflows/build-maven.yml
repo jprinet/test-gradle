@@ -39,6 +39,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Build with Maven 1
+        env:
+          GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
         run: ./mvnw clean
       - name: Build with Maven 2
         env:
