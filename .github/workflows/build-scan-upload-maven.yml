@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Setup Build Scan link capture
         uses: gradle/github-actions/maven-setup@v0.0.1
+        with:
+          skip-non-republished-builds-in-job-summary: true
       - name: Publish Build Scans
         uses: gradle/github-actions/maven-publish-build-scan@v0.0.1
         with:
