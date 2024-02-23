@@ -41,6 +41,8 @@ jobs:
       - name: Build with Maven 1
         run: ./mvnw clean
       - name: Build with Maven 2
+        env:
+          GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN }}
         run: ./mvnw foo
 
   test-matrix:
